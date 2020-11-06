@@ -12,11 +12,7 @@ SiDIF (Simple Data Interchange Format) parser
 
 What it is
 ==========
-py-sidif allows to store table like data (List of Dicts) via  
-
-- Sqlite3
-- JSON
-- SPARQL
+Parser for Simple Data Interchange Format [SiDIF](http://wiki.bitplan.com/index.php/SiDIF) 
 
 Installation
 ============
