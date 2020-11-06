@@ -3,7 +3,7 @@ SiDIF (Simple Data Interchange Format) parser
 
 [![Documentation Status](https://readthedocs.org/projects/py-sidif/badge/?version=latest)](https://py-sidif.readthedocs.io/en/latest/?badge=latest)
 [![pypi](https://img.shields.io/pypi/pyversions/py-sidif)](https://pypi.org/project/py-sidif/)
-[![Github Actions Build](https://github.com/WolfgangFahl/py-sidif/workflows/Build/badge.svg?branch=master)](https://github.com/WolfgangFahl/py-sidif/actions?query=workflow%3ABuild+branch%3Amaster)
+[![Github Actions Build](https://github.com/WolfgangFahl/py-sidif/workflows/Build/badge.svg?branch=main)](https://github.com/WolfgangFahl/py-sidif/actions?query=workflow%3ABuild+branch%3Amain)
 [![PyPI Status](https://img.shields.io/pypi/v/py-sidif.svg)](https://pypi.python.org/pypi/py-sidif/)
 [![Downloads](https://pepy.tech/badge/py-sidif)](https://pepy.tech/project/py-sidif)
 [![GitHub issues](https://img.shields.io/github/issues/WolfgangFahl/py-sidif.svg)](https://github.com/WolfgangFahl/py-sidif/issues)
@@ -36,7 +36,7 @@ scripts/test
 
 Usage
 =====
-see [test cases](https://github.com/WolfgangFahl/py-sidif/tree/master/tests)
+see [test cases](https://github.com/WolfgangFahl/py-sidif/tree/main/tests)
 
 ## Documentation
 [Wiki](http://wiki.bitplan.com/index.php/py-sidif)

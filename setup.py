@@ -21,7 +21,7 @@ setup(
     project_urls=OrderedDict(
         (
             ("Documentation", "http://wiki.bitplan.com/index.php/py-sidif"),
-            ("Code", "https://github.com/WolfgangFahl/py-sidif/blob/master/sidif/sidif.py"),
+            ("Code", "https://github.com/WolfgangFahl/py-sidif/blob/main/sidif/sidif.py"),
             ("Issue tracker", "https://github.com/WolfgangFahl/py-sidif/issues"),
         )
     ),
