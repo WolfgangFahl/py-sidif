@@ -4,10 +4,11 @@ Created on 06.11.2020
 @author: wf
 '''
 from pyparsing import Char,CharsNotIn,Group,Keyword,LineEnd,Literal,OneOrMore,Optional
-from pyparsing import ParserElement,ParseException,ParseResults,Regex,Word,ZeroOrMore
+from pyparsing import ParserElement,ParseException,ParseResults,Regex,Suppress,Word,ZeroOrMore
 from pyparsing import hexnums,tokenMap,printables,pyparsing_common
 
 from urllib.request import urlopen
+import datetime
 import re
 import sys
 
@@ -79,17 +80,23 @@ class SiDIFParser(object):
         compiled=re.compile(uriRegexp,re.RegexFlag.I |re.RegexFlag.UNICODE)
         return compiled
     
-    def getHex(self,tokens):
-        # first token is 0x
-        hexint=tokens[1]
-        return hexint
+    def convertToTime(self,tokenStr,location,token):
+        '''
+        convert a timeLiteral to a time
+        '''
+        fmt='%H:%M:%S'
+        try:
+            dt=datetime.datetime.strptime(token[0], fmt)
+            return dt.time
+        except ValueError as ve:
+            raise ParseException(tokenStr, location, str(ve))
     
     def getLiteral(self):
         '''
         get the literal sub Grammar
         '''
         uri=Group(Regex(SiDIFParser.getUriRegexp()))('uri')
-        hexLiteral=Group(Literal("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
+        hexLiteral=Group(Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
         integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
         floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real)('floatingPointLiteral')
         timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?"))('timeLiteral')
