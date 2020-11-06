@@ -93,17 +93,25 @@ class SiDIFParser(object):
         stringLiteral=Group(Char('"')+Group(ZeroOrMore(CharsNotIn('"')|LineEnd()))+Char('"'))('stringLiteral')
         literal=Group(uri | stringLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
         return literal
+    
+    def getValueGrammar(self):
+        '''
+        sub grammar for value definition
+        '''
+        literal=self.getLiteral()
+        isKeyWord=Keyword("is")
+        ofKeyWord=Keyword("of")
+        identifier=Group(pyparsing_common.identifier)('identifier')   
+        value=Group(literal+isKeyWord+identifier+ofKeyWord+identifier)('value')
+        return value
           
     def getGrammar(self):
         if self.grammar is None:
             isKeyWord=Keyword("is")
             ofKeyWord=Keyword("of")
             hasKeyWord=Keyword("has")
+            value=self.getValueGrammar()
             identifier=Group(pyparsing_common.identifier)('identifier')   
-          
-            literal=self.getLiteral()
-            value=Group(literal+isKeyWord+identifier+ofKeyWord+identifier)('value')
-            
             idlink=Group(identifier+identifier+identifier)("idlink")
             islink=Group(identifier+isKeyWord+identifier+ofKeyWord+identifier)("islink")
             haslink=Group(identifier+hasKeyWord+identifier+identifier)("haslink")

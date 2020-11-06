@@ -6,21 +6,22 @@ Created on 2020-11-06
 import unittest
 from sidif.sidif import SiDIFParser
 
+
 class TestSiDIFParser(unittest.TestCase):
     '''
     test the parser for the Simple Data Interchange Format
     '''
     
     def setUp(self):
-        self.debug=False
-        self.baseUrl="https://raw.githubusercontent.com/BITPlan/org.sidif.triplestore/master/src/test/resources/sidif"
+        self.debug = False
+        self.baseUrl = "https://raw.githubusercontent.com/BITPlan/org.sidif.triplestore/master/src/test/resources/sidif"
         pass
 
     def tearDown(self):
         pass
 
     def getExampleUris(self):
-        exampleUris=["http://foo.com/blah_blah",
+        exampleUris = ["http://foo.com/blah_blah",
              "http://foo.com/blah_blah/",
              "http://foo.com/blah_blah_(wikipedia)",
              "http://foo.com/blah_blah_(wikipedia)_(again)",
@@ -46,79 +47,86 @@ class TestSiDIFParser(unittest.TestCase):
         '''
         test URI Regexp - see https://mathiasbynens.be/demo/url-regex
         '''
-        uriRegexp=SiDIFParser.getUriRegexp()
-        #self.debug=True
-        for i,url in enumerate(self.getExampleUris()):
-            match=uriRegexp.match(url)
+        uriRegexp = SiDIFParser.getUriRegexp()
+        # self.debug=True
+        for i, url in enumerate(self.getExampleUris()):
+            match = uriRegexp.match(url)
             if self.debug:
-                print("%d: %s->%s" % (i,url,"✅" if match else "❌"))
+                print("%d: %s->%s" % (i, url, "✅" if match else "❌"))
             self.assertTrue(match)
             
-    def testLiteral(self):
+    def testGrammars(self):
         '''
-        test the literal partial grammar
+        test the grammars
         '''
-        sp=SiDIFParser()
-        sidifs=[
+        sp = SiDIFParser()
+        examples = [{
+            "grammar": sp.getLiteral(),
+            "title": "Literals",
+            "sidifs": [
             "2020-12-08",
             "1970-01-01 00:00:00",
             "1",
             "3.1415926",
             "15:46",
-            "http://example.org/pic.jpg",
+            "http://example.org/pic.jpg",]
+        },{
+            "grammar": sp.getValueGrammar(),
+            "title": "Value",
+            "sidifs": [
+                "1 is ordinal of it",
+                "2020-10-15 is startDate of it",
+                #"http://example.org/pic.jpg is depiction of it"
+            ]
+        },{
+            "grammar": sp.getGrammar(),
+            "title": "SiDIF",
+            "sidifs": [
+                "SiDIF isA DataInterchangeFormat\n",
+                "Paris capital France", "Paris is capital of France\n",
+                "France has capital Paris\n",
+             ]
+            }
         ]
-        #self.debug=True
-        for i,sidif in enumerate(sidifs):
-            result,error=sp.parseWithGrammar(sp.getLiteral(),sidif,"%d" % i)
-            if self.debug and result:
-                print(result.dump())
-            self.assertIsNone(error)
+        self.debug=True
+        for i, example in enumerate(examples):
+            grammar = example['grammar']
+            title = example['title']
+            for j, sidif in enumerate(example['sidifs']):
+                result, error = sp.parseWithGrammar(grammar, sidif, "%s - %d/%d" % (title, i, j))
+                if self.debug and result:
+                    print(result.dump())
+                self.assertIsNone(error)
             
-    def testSiDIFParser(self):
-        '''
-        test the SiDIF parser
-        '''
-        sp=SiDIFParser()
-        sidifs=[
-            "SiDIF isA DataInterchangeFormat\n",
-            "Paris capital France","Paris is capital of France\n",
-            "France has capital Paris\n",
-        ]
-        for sidif in sidifs:
-            result,error=sp.parseText(sidif)
-            if self.debug and result:
-                print(result.dump())
-            self.assertIsNone(error)
-        pass
-    
     def testIsA(self):
-        url="%s/presentation.sidif" % (self.baseUrl)
-        sp=SiDIFParser(debug=self.debug)
-        result,error=sp.parseUrl(url,title="Presentation")
+        url = "%s/presentation.sidif" % (self.baseUrl)
+        sp = SiDIFParser(debug=self.debug)
+        result, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
     
     def testExamples(self):
         '''
         test Examples from org.sidif.triplestore
         '''
-        sp=SiDIFParser(debug=self.debug)
+        sp = SiDIFParser(debug=self.debug)
         for example in [
-            "example1.sidif","example2.sidif","familyTree.sidif","graph1.sidif",
+            "example1.sidif", "example2.sidif", "familyTree.sidif", "graph1.sidif",
             "presentation.sidif",
-            #"rdf_json_anna_wilder.sidif",
+            # "rdf_json_anna_wilder.sidif",
             "roles.sidif",
             "royal92-14.sidif",
-            #"royal92.sidif"
-            #"trig_bob_alice.sidif",
-            "triple1.sidif","turtle_spiderman.sidif","typetest_url.sidif","utf8.sidif","vcard.sidif"
+            # "royal92.sidif"
+            # "trig_bob_alice.sidif",
+            "triple1.sidif", "turtle_spiderman.sidif", "typetest_url.sidif", "utf8.sidif", "vcard.sidif"
         ]:
-            url="%s/%s" % (self.baseUrl,example)
-            result,error=sp.parseUrl(url,title=example)
+            url = "%s/%s" % (self.baseUrl, example)
+            result, error = sp.parseUrl(url, title=example)
             self.assertTrue(error is None)
             if self.debug and result:
                 print(result.dump())
-                #pprint.pprint(result.asList())
+                # pprint.pprint(result.asList())
+
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testSiDIFParser']
+    # import sys;sys.argv = ['', 'Test.testSiDIFParser']
     unittest.main()
