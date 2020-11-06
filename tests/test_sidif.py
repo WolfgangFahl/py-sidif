@@ -5,7 +5,6 @@ Created on 2020-11-06
 '''
 import unittest
 from sidif.sidif import SiDIFParser
-from pyparsing import ParseResults
 
 class TestSiDIFParser(unittest.TestCase):
     '''
@@ -90,7 +89,7 @@ class TestSiDIFParser(unittest.TestCase):
              ]
             }
         ]
-        self.debug=True
+        #self.debug=True
         for i, example in enumerate(examples):
             grammar = example['grammar']
             title = example['title']
@@ -108,7 +107,8 @@ class TestSiDIFParser(unittest.TestCase):
         sp = SiDIFParser(debug=self.debug)
         parsed, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
-        self.printResult(parsed)
+        if self.debug:
+            sp.printResult(parsed)
     
     def testExamples(self):
         '''

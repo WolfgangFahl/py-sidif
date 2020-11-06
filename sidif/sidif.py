@@ -3,8 +3,9 @@ Created on 06.11.2020
 
 @author: wf
 '''
-from pyparsing import Char,CharsNotIn,Group,Keyword,LineEnd,OneOrMore,Optional
-from pyparsing import ParserElement,ParseException,ParseResults,Regex,Word,ZeroOrMore,printables,pyparsing_common
+from pyparsing import Char,CharsNotIn,Group,Keyword,LineEnd,Literal,OneOrMore,Optional
+from pyparsing import ParserElement,ParseException,ParseResults,Regex,Word,ZeroOrMore
+from pyparsing import hexnums,tokenMap,printables,pyparsing_common
 
 from urllib.request import urlopen
 import re
@@ -83,7 +84,7 @@ class SiDIFParser(object):
         get the literal sub Grammar
         '''
         uri=Group(Regex(SiDIFParser.getUriRegexp()))('uri')
-        hexLiteral=Group(Regex(r"0x[0-9A-Fa-f]{2}"))('hexLiteral')
+        hexLiteral=Group(Literal("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
         integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
         floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real)('floatingPointLiteral')
         timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?"))('timeLiteral')
