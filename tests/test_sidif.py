@@ -5,7 +5,7 @@ Created on 2020-11-06
 '''
 import unittest
 from sidif.sidif import SiDIFParser
-
+from pyparsing import ParseResults
 
 class TestSiDIFParser(unittest.TestCase):
     '''
@@ -90,21 +90,25 @@ class TestSiDIFParser(unittest.TestCase):
              ]
             }
         ]
-        #self.debug=True
+        self.debug=True
         for i, example in enumerate(examples):
             grammar = example['grammar']
             title = example['title']
             for j, sidif in enumerate(example['sidifs']):
                 result, error = sp.parseWithGrammar(grammar, sidif, "%s - %d/%d" % (title, i, j))
                 if self.debug and result:
-                    print(result.dump())
+                    print(sp.printResult(result))
                 self.assertIsNone(error)
             
     def testIsA(self):
+        '''
+        test the isA parsing
+        '''
         url = "%s/presentation.sidif" % (self.baseUrl)
         sp = SiDIFParser(debug=self.debug)
-        result, error = sp.parseUrl(url, title="Presentation")
+        parsed, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
+        self.printResult(parsed)
     
     def testExamples(self):
         '''

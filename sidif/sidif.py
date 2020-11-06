@@ -4,7 +4,7 @@ Created on 06.11.2020
 @author: wf
 '''
 from pyparsing import Char,CharsNotIn,Group,Keyword,LineEnd,OneOrMore,Optional
-from pyparsing import ParserElement,ParseException,Regex,Word,ZeroOrMore,printables,pyparsing_common
+from pyparsing import ParserElement,ParseException,ParseResults,Regex,Word,ZeroOrMore,printables,pyparsing_common
 
 from urllib.request import urlopen
 import re
@@ -98,17 +98,17 @@ class SiDIFParser(object):
         sub grammar for value definition
         '''
         literal=self.getLiteral()
-        isKeyWord=Keyword("is")
-        ofKeyWord=Keyword("of")
+        isKeyWord=Keyword("is").setName("is")
+        ofKeyWord=Keyword("of").setName("of")
         identifier=Group(pyparsing_common.identifier)('identifier')   
         value=Group(literal+isKeyWord+identifier+ofKeyWord+identifier)('value')
         return value
           
     def getGrammar(self):
         if self.grammar is None:
-            isKeyWord=Keyword("is")
-            ofKeyWord=Keyword("of")
-            hasKeyWord=Keyword("has")
+            isKeyWord=Keyword("is").setName("is")
+            ofKeyWord=Keyword("of").setName("of")
+            hasKeyWord=Keyword("has").setName("has")
             value=self.getValueGrammar()
             identifier=Group(pyparsing_common.identifier)('identifier')   
             idlink=Group(identifier+identifier+identifier)("idlink")
@@ -159,5 +159,14 @@ class SiDIFParser(object):
             tuple: ParseResult from pyParsing and error - one of these should be None
         '''
         return self.parseWithGrammar(self.getGrammar(),sidif,title)
-       
-        
+               
+    def printResult(self,pr,indent=''):
+        '''
+        print the given parseResult recursively
+        '''
+        if isinstance(pr,ParseResults):
+            print ("%s%s:" % (indent,pr.getName()))
+            for subpr in pr:
+                self.printResult(subpr,indent+"  ")
+        else:
+            print("%s %s=%s" % (indent,type(pr).__name__,pr))
