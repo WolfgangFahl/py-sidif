@@ -76,7 +76,7 @@ class TestSiDIFParser(unittest.TestCase):
             "sidifs": [
                 "1 is ordinal of it",
                 "2020-10-15 is startDate of it",
-                #"http://example.org/pic.jpg is depiction of it"
+                "http://example.org/pic.jpg is depiction of it"
             ]
         },{
             "grammar": sp.getGrammar(),
@@ -111,13 +111,15 @@ class TestSiDIFParser(unittest.TestCase):
         sp = SiDIFParser(debug=self.debug)
         for example in [
             "example1.sidif", "example2.sidif", "familyTree.sidif", "graph1.sidif",
+            "json_ld_manu_sporny.sidif","notation3_TonyBenn.sidif",
             "presentation.sidif",
-            # "rdf_json_anna_wilder.sidif",
+            "rdf_cd.sidif",
+            "rdf_json_anna_wilder.sidif",
             "roles.sidif",
             "royal92-14.sidif",
             # "royal92.sidif"
-            # "trig_bob_alice.sidif",
-            "triple1.sidif", "turtle_spiderman.sidif", "typetest_url.sidif", "utf8.sidif", "vcard.sidif"
+            "trig_bob_alice.sidif",
+            "triple1.sidif", "turtle_spiderman.sidif", "typetest.sidif", "utf8.sidif", "vcard.sidif"
         ]:
             url = "%s/%s" % (self.baseUrl, example)
             result, error = sp.parseUrl(url, title=example)

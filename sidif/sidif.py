@@ -36,7 +36,6 @@ class SiDIFParser(object):
         # https://mathiasbynens.be/demo/url-regex
         # https://gist.github.com/dperini/729294 
         uriRegexp=(
-        r"^"
         # protocol identifier
         r"(?:(?:(?:https?|ftp|file):)//|(mailto|news|nntp|telnet):)"
         # user:pass authentication
@@ -75,8 +74,7 @@ class SiDIFParser(object):
         # port number (optional)
         r"(?::\d{2,5})?"
         # resource path (optional)
-        r"(?:[/?#]\S*)?"
-        r"$")
+        r"(?:[/?#]\S*)?")
         compiled=re.compile(uriRegexp,re.RegexFlag.I |re.RegexFlag.UNICODE)
         return compiled
     
