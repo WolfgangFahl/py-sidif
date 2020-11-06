@@ -89,7 +89,7 @@ class TestSiDIFParser(unittest.TestCase):
              ]
             }
         ]
-        #self.debug=True
+        self.debug=True
         for i, example in enumerate(examples):
             grammar = example['grammar']
             title = example['title']

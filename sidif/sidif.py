@@ -79,6 +79,11 @@ class SiDIFParser(object):
         compiled=re.compile(uriRegexp,re.RegexFlag.I |re.RegexFlag.UNICODE)
         return compiled
     
+    def getHex(self,tokens):
+        # first token is 0x
+        hexint=tokens[1]
+        return hexint
+    
     def getLiteral(self):
         '''
         get the literal sub Grammar
@@ -88,7 +93,7 @@ class SiDIFParser(object):
         integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
         floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real)('floatingPointLiteral')
         timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?"))('timeLiteral')
-        dateLiteral=Group(Regex(r"[0-9]{4}-[0-9]{2}-[0-9]{2}"))('dateLiteral')
+        dateLiteral=Group(pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate()))('dateLiteral')
         dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral))('dateTimeLiteral')
         stringLiteral=Group(Char('"')+Group(ZeroOrMore(CharsNotIn('"')|LineEnd()))+Char('"'))('stringLiteral')
         literal=Group(uri | stringLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
