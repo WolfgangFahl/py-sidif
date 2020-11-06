@@ -1,5 +1,5 @@
 '''
-Created on 06.11.2020
+Created on 2020-11-06
 
 @author: wf
 '''
@@ -47,7 +47,7 @@ class TestSiDIFParser(unittest.TestCase):
         test URI Regexp - see https://mathiasbynens.be/demo/url-regex
         '''
         uriRegexp=SiDIFParser.getUriRegexp()
-        self.debug=True
+        #self.debug=True
         for i,url in enumerate(self.getExampleUris()):
             match=uriRegexp.match(url)
             if self.debug:
@@ -67,7 +67,7 @@ class TestSiDIFParser(unittest.TestCase):
             "15:46",
             "http://example.org/pic.jpg",
         ]
-        self.debug=True
+        #self.debug=True
         for i,sidif in enumerate(sidifs):
             result,error=sp.parseWithGrammar(sp.getLiteral(),sidif,"%d" % i)
             if self.debug and result:
@@ -101,16 +101,15 @@ class TestSiDIFParser(unittest.TestCase):
         '''
         test Examples from org.sidif.triplestore
         '''
-        self.debug=False
         sp=SiDIFParser(debug=self.debug)
         for example in [
             "example1.sidif","example2.sidif","familyTree.sidif","graph1.sidif",
             "presentation.sidif",
-            "rdf_json_anna_wilder.sidif",
+            #"rdf_json_anna_wilder.sidif",
             "roles.sidif",
             "royal92-14.sidif",
             #"royal92.sidif"
-            "trig_bob_alice.sidif",
+            #"trig_bob_alice.sidif",
             "triple1.sidif","turtle_spiderman.sidif","typetest_url.sidif","utf8.sidif","vcard.sidif"
         ]:
             url="%s/%s" % (self.baseUrl,example)
