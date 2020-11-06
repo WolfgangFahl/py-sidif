@@ -84,10 +84,12 @@ class SiDIFParser(object):
         '''
         convert a timeLiteral to a time
         '''
-        fmt='%H:%M:%S'
         try:
-            dt=datetime.datetime.strptime(token[0], fmt)
-            return dt.time
+            timestr=token[0]
+            fmt='%H:%M:%S' if len(timestr)==8 else '%H:%M'
+            dt=datetime.datetime.strptime(timestr, fmt)
+            timeResult=dt.time()
+            return timeResult
         except ValueError as ve:
             raise ParseException(tokenStr, location, str(ve))
     
@@ -99,7 +101,7 @@ class SiDIFParser(object):
         hexLiteral=Group(Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
         integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
         floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real)('floatingPointLiteral')
-        timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?"))('timeLiteral')
+        timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?").setParseAction(self.convertToTime))('timeLiteral')
         dateLiteral=Group(pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate()))('dateLiteral')
         dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral))('dateTimeLiteral')
         stringLiteral=Group(Char('"')+Group(ZeroOrMore(CharsNotIn('"')|LineEnd()))+Char('"'))('stringLiteral')

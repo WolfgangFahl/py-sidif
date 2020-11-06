@@ -64,7 +64,7 @@ class TestSiDIFParser(unittest.TestCase):
             "title": "Literals",
             "sidifs": [
             "2020-12-08",
-            "1970-01-01 00:00:00",
+            "1970-01-01 18:35:23",
             "0xff",
             "1",
             "3.1415926",
