@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sidif.sidif &mdash; py-sidif  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py-sidif
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sidif.html">sidif package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests.html">tests package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">py-sidif</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>sidif.sidif</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sidif.sidif</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on 06.11.2020</span>
+
+<span class="sd">@author: wf</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Char</span><span class="p">,</span><span class="n">CharsNotIn</span><span class="p">,</span><span class="n">Group</span><span class="p">,</span><span class="n">Keyword</span><span class="p">,</span><span class="n">LineEnd</span><span class="p">,</span><span class="n">OneOrMore</span><span class="p">,</span><span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">ParserElement</span><span class="p">,</span><span class="n">ParseException</span><span class="p">,</span><span class="n">Regex</span><span class="p">,</span><span class="n">Word</span><span class="p">,</span><span class="n">ZeroOrMore</span><span class="p">,</span><span class="n">printables</span><span class="p">,</span><span class="n">pyparsing_common</span>
+
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<div class="viewcode-block" id="SiDIFParser"><a class="viewcode-back" href="../../sidif.html#sidif.sidif.SiDIFParser">[docs]</a><span class="k">class</span> <span class="nc">SiDIFParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parser for SiDIF Simple Data Interchange Format </span>
+<span class="sd">    see http://wiki.bitplan.com/index.php/SiDIF</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">showErrors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        Args:</span>
+<span class="sd">            showErrors(bool): True if errors should be shown/printed</span>
+<span class="sd">            debug(bool): True if debugging should be enabled</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">showError</span><span class="o">=</span><span class="n">showErrors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">=</span><span class="kc">None</span>
+       
+<div class="viewcode-block" id="SiDIFParser.getUriRegexp"><a class="viewcode-back" href="../../sidif.html#sidif.sidif.SiDIFParser.getUriRegexp">[docs]</a>    <span class="nd">@staticmethod</span>    
+    <span class="k">def</span> <span class="nf">getUriRegexp</span><span class="p">():</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        get a regular expression for an URI</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># https://mathiasbynens.be/demo/url-regex</span>
+        <span class="c1"># https://gist.github.com/dperini/729294 </span>
+        <span class="n">uriRegexp</span><span class="o">=</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">&quot;^&quot;</span>
+        <span class="c1"># protocol identifier</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:(?:(?:https?|ftp):)?//)&quot;</span>
+        <span class="c1"># user:pass authentication</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:\S+(?::\S*)?@)?&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:&quot;</span>
+        <span class="c1"># IP address exclusion</span>
+        <span class="c1"># private &amp; local networks</span>
+        <span class="sa">r</span><span class="s2">&quot;(?!(?:10|127)(?:\.\d{1,3})</span><span class="si">{3}</span><span class="s2">)&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;(?!(?:169\.254|192\.168)(?:\.\d{1,3})</span><span class="si">{2}</span><span class="s2">)&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3})</span><span class="si">{2}</span><span class="s2">)&quot;</span>
+        <span class="c1"># IP address dotted notation octets</span>
+        <span class="c1"># excludes loopback network 0.0.0.0</span>
+        <span class="c1"># excludes reserved space &gt;= 224.0.0.0</span>
+        <span class="c1"># excludes network &amp; broadcast addresses</span>
+        <span class="c1"># (first &amp; last IP address of each class)</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5]))</span><span class="si">{2}</span><span class="s2">&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;|&quot;</span>
+        <span class="c1"># host &amp; domain names, may end with dot</span>
+        <span class="c1"># can be replaced by a shortest alternative</span>
+        <span class="c1"># r&quot;(?![-_])(?:[-\w\u00a1-\uffff]{0,63}[^-_]\.)+&quot;</span>
+        <span class="c1"># r&quot;(?:(?:[a-z\u00a1-\uffff0-9]-?)*[a-z\u00a1-\uffff0-9]+)&quot;</span>
+        <span class="c1"># # domain name</span>
+        <span class="c1"># r&quot;(?:\.(?:[a-z\u00a1-\uffff0-9]-?)*[a-z\u00a1-\uffff0-9]+)*&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;[a-z0-9\u00a1-\uffff]&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;[a-z0-9\u00a1-\uffff_-]{0,62}&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;)?&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;[a-z0-9\u00a1-\uffff]\.&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;)+&quot;</span>
+        <span class="c1"># TLD identifier name, may end with dot</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:[a-z\u00a1-\uffff]{2,}\.?)&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;)&quot;</span>
+        <span class="c1"># port number (optional)</span>
+        <span class="sa">r</span><span class="s2">&quot;(?::\d{2,5})?&quot;</span>
+        <span class="c1"># resource path (optional)</span>
+        <span class="sa">r</span><span class="s2">&quot;(?:[/?#]\S*)?&quot;</span>
+        <span class="sa">r</span><span class="s2">&quot;$&quot;</span><span class="p">)</span>
+        <span class="n">compiled</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">uriRegexp</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">RegexFlag</span><span class="o">.</span><span class="n">I</span> <span class="o">|</span><span class="n">re</span><span class="o">.</span><span class="n">RegexFlag</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">compiled</span></div>
+        
+<div class="viewcode-block" id="SiDIFParser.getGrammar"><a class="viewcode-back" href="../../sidif.html#sidif.sidif.SiDIFParser.getGrammar">[docs]</a>    <span class="k">def</span> <span class="nf">getGrammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>   
+            <span class="n">ParserElement</span><span class="o">.</span><span class="n">setDefaultWhitespaceChars</span><span class="p">(</span><span class="s2">&quot; </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">isKeyWord</span><span class="o">=</span><span class="n">Keyword</span><span class="p">(</span><span class="s2">&quot;is&quot;</span><span class="p">)</span>
+            <span class="n">ofKeyWord</span><span class="o">=</span><span class="n">Keyword</span><span class="p">(</span><span class="s2">&quot;of&quot;</span><span class="p">)</span>
+            <span class="n">hasKeyWord</span><span class="o">=</span><span class="n">Keyword</span><span class="p">(</span><span class="s2">&quot;has&quot;</span><span class="p">)</span>
+            <span class="n">identifier</span><span class="o">=</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[A-Za-z][A-Za-z_0-9]*&quot;</span><span class="p">)</span>
+            
+            <span class="n">decimalLiteral</span><span class="o">=</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[1-9][0-9]*&quot;</span><span class="p">)</span>
+            <span class="n">uri</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="n">SiDIFParser</span><span class="o">.</span><span class="n">getUriRegexp</span><span class="p">()))(</span><span class="s1">&#39;uri&#39;</span><span class="p">)</span>
+            <span class="n">integerLiteral</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">Optional</span><span class="p">(</span><span class="n">Char</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">))</span><span class="o">+</span><span class="n">decimalLiteral</span><span class="p">)(</span><span class="s1">&#39;integerLiteral&#39;</span><span class="p">)</span>
+            <span class="n">floatingPointLiteral</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">pyparsing_common</span><span class="o">.</span><span class="n">real</span><span class="p">)(</span><span class="s1">&#39;floatingPointLiteral&#39;</span><span class="p">)</span>
+            <span class="n">timeLiteral</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9]</span><span class="si">{2}</span><span class="s2">:[0-9]</span><span class="si">{2}</span><span class="s2">(:[0-9]</span><span class="si">{2}</span><span class="s2">)?&quot;</span><span class="p">))</span>
+            <span class="n">dateLiteral</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9]</span><span class="si">{4}</span><span class="s2">-[0-9]</span><span class="si">{2}</span><span class="s2">-[0-9]</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="p">))(</span><span class="s1">&#39;dateLiteral&#39;</span><span class="p">)</span>
+            <span class="n">dateTimeLiteral</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">dateLiteral</span><span class="o">+</span><span class="n">Optional</span><span class="p">(</span><span class="n">timeLiteral</span><span class="p">))(</span><span class="s1">&#39;dateLiteral&#39;</span><span class="p">)</span>
+            <span class="n">stringLiteral</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">Char</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">Group</span><span class="p">(</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">CharsNotIn</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">|</span><span class="n">LineEnd</span><span class="p">()))</span><span class="o">+</span><span class="n">Char</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))(</span><span class="s1">&#39;stringLiteral&#39;</span><span class="p">)</span>
+            <span class="n">literal</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">uri</span> <span class="o">|</span> <span class="n">stringLiteral</span> <span class="o">|</span> <span class="n">dateTimeLiteral</span> <span class="o">|</span> <span class="n">timeLiteral</span> <span class="o">|</span> <span class="n">floatingPointLiteral</span><span class="o">|</span> <span class="n">integerLiteral</span> <span class="p">)(</span><span class="s2">&quot;literal&quot;</span><span class="p">)</span>
+            
+            <span class="n">value</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">literal</span><span class="o">+</span><span class="n">isKeyWord</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="n">ofKeyWord</span><span class="o">+</span><span class="n">identifier</span><span class="p">)(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            
+            <span class="n">idlink</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">identifier</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="n">identifier</span><span class="p">)(</span><span class="s2">&quot;idlink&quot;</span><span class="p">)</span>
+            <span class="n">islink</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">identifier</span><span class="o">+</span><span class="n">isKeyWord</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="n">ofKeyWord</span><span class="o">+</span><span class="n">identifier</span><span class="p">)(</span><span class="s2">&quot;islink&quot;</span><span class="p">)</span>
+            <span class="n">haslink</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">identifier</span><span class="o">+</span><span class="n">hasKeyWord</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="n">identifier</span><span class="p">)(</span><span class="s2">&quot;haslink&quot;</span><span class="p">)</span>
+            <span class="n">link</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">islink</span><span class="o">|</span><span class="n">haslink</span><span class="o">|</span><span class="n">idlink</span><span class="p">)(</span><span class="s2">&quot;link&quot;</span><span class="p">)</span>
+            <span class="n">comment</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">Char</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span><span class="o">+</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">Word</span><span class="p">(</span><span class="n">printables</span><span class="p">))</span><span class="o">+</span><span class="n">LineEnd</span><span class="p">()</span><span class="o">|</span><span class="n">LineEnd</span><span class="p">())(</span><span class="s1">&#39;comment*&#39;</span><span class="p">)</span>
+            <span class="n">line</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">value</span><span class="o">|</span><span class="n">link</span><span class="p">)(</span><span class="s1">&#39;line&#39;</span><span class="p">)</span>
+            <span class="n">links</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">OneOrMore</span><span class="p">(</span><span class="n">line</span><span class="o">+</span><span class="n">LineEnd</span><span class="p">()</span><span class="o">|</span><span class="n">comment</span><span class="p">))(</span><span class="s1">&#39;links*&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">=</span><span class="n">links</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span></div>
+    
+<div class="viewcode-block" id="SiDIFParser.parseUrl"><a class="viewcode-back" href="../../sidif.html#sidif.sidif.SiDIFParser.parseUrl">[docs]</a>    <span class="k">def</span> <span class="nf">parseUrl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        parse the sidif text from the given url</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            url(str): the url to read the SiDIF text from</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">sidif</span><span class="o">=</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">url</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseText</span><span class="p">(</span><span class="n">sidif</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SiDIFParser.parseWithGrammar"><a class="viewcode-back" href="../../sidif.html#sidif.sidif.SiDIFParser.parseWithGrammar">[docs]</a>    <span class="k">def</span> <span class="nf">parseWithGrammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">grammar</span><span class="p">,</span><span class="n">text</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">result</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">error</span><span class="o">=</span><span class="kc">None</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;?&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="n">parseAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">pe</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showError</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: error in line </span><span class="si">%d</span><span class="s2"> col </span><span class="si">%d</span><span class="s2">: </span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span><span class="n">pe</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span><span class="n">pe</span><span class="o">.</span><span class="n">col</span><span class="p">,</span><span class="n">pe</span><span class="o">.</span><span class="n">line</span><span class="p">),</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="c1">#if self.debug:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="n">pe</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">pe</span><span class="p">))</span>
+            <span class="n">error</span><span class="o">=</span><span class="n">pe</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span><span class="n">error</span></div>
+            
+<div class="viewcode-block" id="SiDIFParser.parseText"><a class="viewcode-back" href="../../sidif.html#sidif.sidif.SiDIFParser.parseText">[docs]</a>    <span class="k">def</span> <span class="nf">parseText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sidif</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        parse the given sidif text</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            sidif(str): the SiDIF text to be parsed</span>
+<span class="sd">            </span>
+<span class="sd">        Return:</span>
+<span class="sd">            tuple: ParseResult from pyParsing and error - one of these should be None</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parseWithGrammar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getGrammar</span><span class="p">(),</span><span class="n">sidif</span><span class="p">,</span><span class="n">title</span><span class="p">)</span></div></div>
+       
+        
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Wolfgang Fahl
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
