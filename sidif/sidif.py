@@ -83,13 +83,14 @@ class SiDIFParser(object):
         get the literal sub Grammar
         '''
         uri=Group(Regex(SiDIFParser.getUriRegexp()))('uri')
+        hexLiteral=Group(Regex(r"0x[0-9A-Fa-f]{2}"))('hexLiteral')
         integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
-        floatingPointLiteral=Group(pyparsing_common.real)('floatingPointLiteral')
+        floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real)('floatingPointLiteral')
         timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?"))('timeLiteral')
         dateLiteral=Group(Regex(r"[0-9]{4}-[0-9]{2}-[0-9]{2}"))('dateLiteral')
         dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral))('dateTimeLiteral')
         stringLiteral=Group(Char('"')+Group(ZeroOrMore(CharsNotIn('"')|LineEnd()))+Char('"'))('stringLiteral')
-        literal=Group(uri | stringLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
+        literal=Group(uri | stringLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
         return literal
     
     def getValueGrammar(self):

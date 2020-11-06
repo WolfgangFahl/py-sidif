@@ -66,8 +66,10 @@ class TestSiDIFParser(unittest.TestCase):
             "sidifs": [
             "2020-12-08",
             "1970-01-01 00:00:00",
+            "0xff",
             "1",
             "3.1415926",
+            "6.02e23",
             "15:46",
             "http://example.org/pic.jpg",]
         },{
@@ -88,7 +90,7 @@ class TestSiDIFParser(unittest.TestCase):
              ]
             }
         ]
-        self.debug=True
+        #self.debug=True
         for i, example in enumerate(examples):
             grammar = example['grammar']
             title = example['title']
