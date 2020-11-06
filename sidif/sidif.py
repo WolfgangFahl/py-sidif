@@ -26,6 +26,7 @@ class SiDIFParser(object):
         self.showError=showErrors
         self.debug=debug
         self.grammar=None
+        ParserElement.setDefaultWhitespaceChars(" \t")
        
     @staticmethod    
     def getUriRegexp():
@@ -37,7 +38,7 @@ class SiDIFParser(object):
         uriRegexp=(
         r"^"
         # protocol identifier
-        r"(?:(?:(?:https?|ftp):)?//)"
+        r"(?:(?:(?:https?|ftp|file):)//|(mailto|news|nntp|telnet):)"
         # user:pass authentication
         r"(?:\S+(?::\S*)?@)?"
         r"(?:"
@@ -78,25 +79,29 @@ class SiDIFParser(object):
         r"$")
         compiled=re.compile(uriRegexp,re.RegexFlag.I |re.RegexFlag.UNICODE)
         return compiled
-        
+    
+    def getLiteral(self):
+        '''
+        get the literal sub Grammar
+        '''
+        uri=Group(Regex(SiDIFParser.getUriRegexp()))('uri')
+        integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
+        floatingPointLiteral=Group(pyparsing_common.real)('floatingPointLiteral')
+        timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?"))('timeLiteral')
+        dateLiteral=Group(Regex(r"[0-9]{4}-[0-9]{2}-[0-9]{2}"))('dateLiteral')
+        dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral))('dateTimeLiteral')
+        stringLiteral=Group(Char('"')+Group(ZeroOrMore(CharsNotIn('"')|LineEnd()))+Char('"'))('stringLiteral')
+        literal=Group(uri | stringLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
+        return literal
+          
     def getGrammar(self):
-        if self.grammar is None:   
-            ParserElement.setDefaultWhitespaceChars(" \t")
+        if self.grammar is None:
             isKeyWord=Keyword("is")
             ofKeyWord=Keyword("of")
             hasKeyWord=Keyword("has")
-            identifier=Regex(r"[A-Za-z][A-Za-z_0-9]*")
-            
-            decimalLiteral=Regex(r"[1-9][0-9]*")
-            uri=Group(Regex(SiDIFParser.getUriRegexp()))('uri')
-            integerLiteral=Group(Optional(Char("-"))+decimalLiteral)('integerLiteral')
-            floatingPointLiteral=Group(pyparsing_common.real)('floatingPointLiteral')
-            timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?"))
-            dateLiteral=Group(Regex(r"[0-9]{4}-[0-9]{2}-[0-9]{2}"))('dateLiteral')
-            dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral))('dateLiteral')
-            stringLiteral=Group(Char('"')+Group(ZeroOrMore(CharsNotIn('"')|LineEnd()))+Char('"'))('stringLiteral')
-            literal=Group(uri | stringLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
-            
+            identifier=Group(pyparsing_common.identifier)('identifier')   
+          
+            literal=self.getLiteral()
             value=Group(literal+isKeyWord+identifier+ofKeyWord+identifier)('value')
             
             idlink=Group(identifier+identifier+identifier)("idlink")
