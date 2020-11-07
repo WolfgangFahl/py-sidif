@@ -126,7 +126,8 @@ class TestSiDIFParser(unittest.TestCase):
             "rdf_json_anna_wilder.sidif",
             "roles.sidif",
             "royal92-14.sidif",
-            # "royal92.sidif"
+            # 62770 triples ...
+            # "royal92.sidif",
             "trig_bob_alice.sidif",
             "triple1.sidif", "turtle_spiderman.sidif", "typetest.sidif", "utf8.sidif", "vcard.sidif"
         ]:
