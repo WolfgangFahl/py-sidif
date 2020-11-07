@@ -30,9 +30,13 @@ class Triple():
         self.s=pSubject
         self.p=pPredicate
         self.o=pObject
-        
+    
+    def dump(self,value):    
+        d="%s(%s)" % (value,type(value).__name__)
+        return d
+    
     def __str__(self):
-        text="(%s,%s,%s)" % (self.s,self.p,self.o)
+        text="{%s,%s,%s}" % (self.dump(self.s),self.dump(self.p),self.dump(self.o))
         return text
 
 class SiDIFParser(object):
@@ -126,7 +130,50 @@ class SiDIFParser(object):
             elif tokenStr=="false":
                 return False
         raise ParseException(tokenStr, location, "invalid boolean %s" % tokenStr)
+    
+    def handleDateTimeLiteral(self,tokenStr,location,group):
+        '''
+        handle a date time literal
+        '''
+        token=group[0]
+        if len(token)==1:
+            date=token[0]
+            return date
+        elif len(token)==2:
+            date=token[0]
+            time=token[1]
+            dt=datetime.datetime(date.year,date.month,date.day,time.hour,time.minute,time.second)
+            return dt
+        else:
+            raise ParseException(tokenStr, location, "invalid DateTimeLiteral %s" % tokenStr)
+            
+    
+    def dereference(self,tokens,depth=1):
+        '''
+        dereference identifiers and literals from the given tokens
         
+        Args:
+            tokens(ParseResults): tokens to be handled
+        Returns:
+            string: error Message if any
+        '''
+        if depth>1:
+            errMsg=self.dereference(tokens, depth-1)
+            if errMsg is not None:
+                return errMsg
+        for i,token in enumerate(tokens):
+            if isinstance(token,ParseResults):
+                tokenName=token.getName()
+                if tokenName=="identifier" or tokenName=="literal" or tokenName=='stringLiteral':
+                    if len(token)>0:
+                        tokens[i]=token[0]
+                    else:
+                        tokens[i]=''
+                else:
+                    msg="%d: %s(%s)=%s" % (i,tokenName,type(token),token)
+                    return msg
+        return None
+                    
         
     def convertToTriple(self,tokenStr,location,group):
         '''
@@ -142,14 +189,10 @@ class SiDIFParser(object):
         tokenCount=len(tokens)
         if tokenCount!=3:
             raise ParseException(tokenStr, location, "invalid triple %s: %d tokens found 3 expected" % (tripleKind,tokenCount))  
-        for i,token in enumerate(tokens):
-            if isinstance(token,ParseResults):
-                tokenName=token.getName()
-                if tokenName=="identifier" or tokenName=="literal":
-                    tokens[i]=token[0]
-                else:
-                    msg="%d: %s(%s)=%s" % (i,tokenName,type(token),token)
-                    raise ParseException(tokenStr,location,msg)
+        errorMsg=self.dereference(tokens,2)
+        if errorMsg is not None:
+            self.warn(errorMsg)
+            raise ParseException(tokenStr,location,errorMsg)
         e1=tokens[0]
         e2=tokens[1]
         e3=tokens[2]
@@ -173,15 +216,16 @@ class SiDIFParser(object):
         '''
         get the literal sub Grammar
         '''
-        uri=Group(Regex(SiDIFParser.getUriRegexp()))('uri')
+        uri=Regex(SiDIFParser.getUriRegexp())('uri')
         booleanLiteral=Group(Regex(r"true|false")).setParseAction(self.convertToBoolean)('boolean')
         hexLiteral=Group(Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
-        integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
-        floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real)('floatingPointLiteral')
-        timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?").setParseAction(self.convertToTime))('timeLiteral')
-        dateLiteral=Group(pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate()))('dateLiteral')
-        dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral))('dateTimeLiteral')
+        integerLiteral=Group(pyparsing_common.signed_integer).setParseAction(lambda tokens: tokens[0])('integerLiteral')
+        floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real).setParseAction(lambda tokens: tokens[0])('floatingPointLiteral')
+        timeLiteral=Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?").setParseAction(self.convertToTime)('timeLiteral')
+        dateLiteral=pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate())('dateLiteral')
+        dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral)).setParseAction(self.handleDateTimeLiteral)('dateTimeLiteral')
         stringLiteral=Group(Suppress('"')+ZeroOrMore(CharsNotIn('"')|LineEnd())+Suppress('"'))('stringLiteral')
+        # setParseAction(lambda tokens: tokens[0] if len(tokens)>0 else '' )
         literal=Group(uri | stringLiteral | booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
         return literal
     
@@ -268,6 +312,16 @@ class SiDIFParser(object):
             tuple: ParseResult from pyParsing and error - one of these should be None
         '''
         return self.parseWithGrammar(self.getGrammar(),sidif,title)
+    
+    def warn(self,msg):
+        '''
+        show a warning with the given message
+        
+        Args:
+            msg(str): the warning message
+        '''
+        print(msg,file=sys.stderr)
+        
                
     def printResult(self,pr,indent=''):
         '''
