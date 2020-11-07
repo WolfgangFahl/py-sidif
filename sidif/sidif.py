@@ -164,13 +164,14 @@ class SiDIFParser(object):
         for i,token in enumerate(tokens):
             if isinstance(token,ParseResults):
                 tokenName=token.getName()
+                msg="%d: %s(%s)=%s" % (i,tokenName,type(token),token)
+                #self.warn(msg)
                 if tokenName=="identifier" or tokenName=="literal" or tokenName=='stringLiteral':
                     if len(token)>0:
                         tokens[i]=token[0]
                     else:
                         tokens[i]=''
                 else:
-                    msg="%d: %s(%s)=%s" % (i,tokenName,type(token),token)
                     return msg
         return None
                     
@@ -191,7 +192,7 @@ class SiDIFParser(object):
             raise ParseException(tokenStr, location, "invalid triple %s: %d tokens found 3 expected" % (tripleKind,tokenCount))  
         errorMsg=self.dereference(tokens,2)
         if errorMsg is not None:
-            self.warn(errorMsg)
+            #self.warn(errorMsg)
             raise ParseException(tokenStr,location,errorMsg)
         e1=tokens[0]
         e2=tokens[1]
@@ -224,13 +225,19 @@ class SiDIFParser(object):
         timeLiteral=Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?").setParseAction(self.convertToTime)('timeLiteral')
         dateLiteral=pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate())('dateLiteral')
         dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral)).setParseAction(self.handleDateTimeLiteral)('dateTimeLiteral')
-        stringLiteral=Group(Suppress('"')+ZeroOrMore(CharsNotIn('"')|LineEnd())+Suppress('"'))('stringLiteral')
+        stringLiteral=Group(
+            Suppress('"')+ZeroOrMore(CharsNotIn('"')|LineEnd())+Suppress('"')
+        )('stringLiteral')
         # setParseAction(lambda tokens: tokens[0] if len(tokens)>0 else '' )
-        literal=Group(uri | stringLiteral | booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
+        literal=Group(
+            uri | stringLiteral | booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral 
+        ).setParseAction(lambda tokens: tokens[0])("literal")
         return literal
     
     def getIdentifier(self):
-        identifier=Group(pyparsing_common.identifier)('identifier')   
+        identifier=Group(
+            pyparsing_common.identifier
+        ).setParseAction(lambda tokens: tokens[0])('identifier')   
         return identifier
     
     def getValueGrammar(self):
