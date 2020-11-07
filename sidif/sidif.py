@@ -147,6 +147,19 @@ class SiDIFParser(object):
         else:
             raise ParseException(tokenStr, location, "invalid DateTimeLiteral %s" % tokenStr)
             
+    def handleStringLiteral(self,_tokenStr,_location,tokens):
+        '''
+        handle string literals
+        
+        Args:
+            tokens(ParseResults): the tokens for the literal
+        '''
+        token=tokens[0]
+        if len(token)>0:
+            text=token[0]
+        else:
+            text=''
+        return text
     
     def dereference(self,tokens,depth=1):
         '''
@@ -165,7 +178,7 @@ class SiDIFParser(object):
             if isinstance(token,ParseResults):
                 tokenName=token.getName()
                 msg="%d: %s(%s)=%s" % (i,tokenName,type(token),token)
-                #self.warn(msg)
+                self.warn(msg)
                 if tokenName=="identifier" or tokenName=="literal" or tokenName=='stringLiteral':
                     if len(token)>0:
                         tokens[i]=token[0]
@@ -173,8 +186,7 @@ class SiDIFParser(object):
                         tokens[i]=''
                 else:
                     return msg
-        return None
-                    
+        return None 
         
     def convertToTriple(self,tokenStr,location,group):
         '''
@@ -218,16 +230,24 @@ class SiDIFParser(object):
         get the literal sub Grammar
         '''
         uri=Regex(SiDIFParser.getUriRegexp())('uri')
-        booleanLiteral=Group(Regex(r"true|false")).setParseAction(self.convertToBoolean)('boolean')
-        hexLiteral=Group(Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
-        integerLiteral=Group(pyparsing_common.signed_integer).setParseAction(lambda tokens: tokens[0])('integerLiteral')
-        floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real).setParseAction(lambda tokens: tokens[0])('floatingPointLiteral')
+        booleanLiteral=Regex(r"true|false").setParseAction(self.convertToBoolean)('boolean')
+        hexLiteral=Group(
+            Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16)))
+        )('hexLiteral')
+        integerLiteral=Group(
+            pyparsing_common.signed_integer
+        ).setParseAction(lambda tokens: tokens[0])('integerLiteral')
+        floatingPointLiteral=Group(
+            pyparsing_common.sci_real|pyparsing_common.real
+        ).setParseAction(lambda tokens: tokens[0])('floatingPointLiteral')
         timeLiteral=Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?").setParseAction(self.convertToTime)('timeLiteral')
         dateLiteral=pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate())('dateLiteral')
-        dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral)).setParseAction(self.handleDateTimeLiteral)('dateTimeLiteral')
+        dateTimeLiteral=Group(
+            dateLiteral+Optional(timeLiteral)
+        ).setParseAction(self.handleDateTimeLiteral)('dateTimeLiteral')
         stringLiteral=Group(
             Suppress('"')+ZeroOrMore(CharsNotIn('"')|LineEnd())+Suppress('"')
-        )('stringLiteral')
+        ).setParseAction(self.handleStringLiteral)('stringLiteral')
         # setParseAction(lambda tokens: tokens[0] if len(tokens)>0 else '' )
         literal=Group(
             uri | stringLiteral | booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral 

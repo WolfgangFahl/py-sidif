@@ -78,7 +78,8 @@ class TestSiDIFParser(unittest.TestCase):
             "sidifs": [
                 "1 is ordinal of it",
                 "2020-10-15 is startDate of it",
-                "http://example.org/pic.jpg is depiction of it"
+                "http://example.org/pic.jpg is depiction of it",
+                '"" is subtitle of it'
             ]
         },{
             "grammar": sp.getGrammar(),
@@ -132,10 +133,9 @@ class TestSiDIFParser(unittest.TestCase):
             url = "%s/%s" % (self.baseUrl, example)
             result, error = sp.parseUrl(url, title=example)
             self.assertTrue(error is None)
+            self.debug=True
             if self.debug and result:
-                print(result.dump())
-                # pprint.pprint(result.asList())
-
+                sp.printResult(result)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testSiDIFParser']
