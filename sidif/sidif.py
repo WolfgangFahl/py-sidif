@@ -3,7 +3,7 @@ Created on 06.11.2020
 
 @author: wf
 '''
-from pyparsing import Char,CharsNotIn,Group,Keyword,LineEnd,Literal,OneOrMore,Optional
+from pyparsing import Char,CharsNotIn,Group,LineEnd,OneOrMore,Optional
 from pyparsing import ParserElement,ParseException,ParseResults,Regex,Suppress,Word,ZeroOrMore
 from pyparsing import hexnums,tokenMap,printables,pyparsing_common
 
@@ -11,6 +11,29 @@ from urllib.request import urlopen
 import datetime
 import re
 import sys
+
+class Triple():
+    '''
+    a triple (subject,predicate,object)
+    '''
+    
+    def __init__(self,pSubject,pPredicate,pObject):
+        '''
+        constructor
+        
+        Args:
+            pSubject(object): subject
+            pPredicate(object): predicate
+            pObject(object): object
+            
+        '''
+        self.s=pSubject
+        self.p=pPredicate
+        self.o=pObject
+        
+    def __str__(self):
+        text="(%s,%s,%s)" % (self.s,self.p,self.o)
+        return text
 
 class SiDIFParser(object):
     '''
@@ -92,43 +115,105 @@ class SiDIFParser(object):
             return timeResult
         except ValueError as ve:
             raise ParseException(tokenStr, location, str(ve))
+        
+    def convertToBoolean(self,tokenStr,location,token):
+        '''
+        convert the token to a boolean
+        '''
+        if len(token)==1:
+            if tokenStr=="true":
+                return True
+            elif tokenStr=="false":
+                return False
+        raise ParseException(tokenStr, location, "invalid boolean %s" % tokenStr)
+        
+        
+    def convertToTriple(self,tokenStr,location,group):
+        '''
+        convert the given token to a triple
+        
+        Args:
+            tokenStr(str): the token string
+            location(object): location of the parse process
+            group(ParseResults): the expected triple defining group
+        ''' 
+        tripleKind=group.getName()
+        tokens=group[0]
+        tokenCount=len(tokens)
+        if tokenCount!=3:
+            raise ParseException(tokenStr, location, "invalid triple %s: %d tokens found 3 expected" % (tripleKind,tokenCount))  
+        for i,token in enumerate(tokens):
+            if isinstance(token,ParseResults):
+                tokenName=token.getName()
+                if tokenName=="identifier" or tokenName=="literal":
+                    tokens[i]=token[0]
+                else:
+                    msg="%d: %s(%s)=%s" % (i,tokenName,type(token),token)
+                    raise ParseException(tokenStr,location,msg)
+        e1=tokens[0]
+        e2=tokens[1]
+        e3=tokens[2]
+        if tripleKind=="isValue":
+            '"Paris" is capital of France'
+            triple=Triple(e1,e2,e3)
+        elif tripleKind=="idLink":
+            'Paris capital France'
+            triple=Triple(e1,e2,e3)
+        elif tripleKind=="isLink":
+            'Paris is capital of France'
+            triple=Triple(e1,e2,e3)
+        elif tripleKind=="hasLink":
+            'France has capital Paris'
+            triple=Triple(e3,e2,e1)
+        else:
+            raise ParseException(tokenStr, location, "invalid tripleKind %s" %tripleKind)  
+        return triple
     
     def getLiteral(self):
         '''
         get the literal sub Grammar
         '''
         uri=Group(Regex(SiDIFParser.getUriRegexp()))('uri')
+        booleanLiteral=Group(Regex(r"true|false")).setParseAction(self.convertToBoolean)('boolean')
         hexLiteral=Group(Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
         integerLiteral=Group(pyparsing_common.signed_integer)('integerLiteral')
         floatingPointLiteral=Group(pyparsing_common.sci_real|pyparsing_common.real)('floatingPointLiteral')
         timeLiteral=Group(Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?").setParseAction(self.convertToTime))('timeLiteral')
         dateLiteral=Group(pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate()))('dateLiteral')
         dateTimeLiteral=Group(dateLiteral+Optional(timeLiteral))('dateTimeLiteral')
-        stringLiteral=Group(Char('"')+Group(ZeroOrMore(CharsNotIn('"')|LineEnd()))+Char('"'))('stringLiteral')
-        literal=Group(uri | stringLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
+        stringLiteral=Group(Suppress('"')+ZeroOrMore(CharsNotIn('"')|LineEnd())+Suppress('"'))('stringLiteral')
+        literal=Group(uri | stringLiteral | booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral )("literal")
         return literal
+    
+    def getIdentifier(self):
+        identifier=Group(pyparsing_common.identifier)('identifier')   
+        return identifier
     
     def getValueGrammar(self):
         '''
         sub grammar for value definition
         '''
-        literal=self.getLiteral()
-        isKeyWord=Keyword("is").setName("is")
-        ofKeyWord=Keyword("of").setName("of")
-        identifier=Group(pyparsing_common.identifier)('identifier')   
-        value=Group(literal+isKeyWord+identifier+ofKeyWord+identifier)('value')
+        literal=self.getLiteral()    
+        identifier=self.getIdentifier()
+        value=Group(
+            literal+Suppress("is")+identifier+Suppress('of')+identifier
+        ).setParseAction(self.convertToTriple)('isValue')
         return value
           
     def getGrammar(self):
         if self.grammar is None:
-            isKeyWord=Keyword("is").setName("is")
-            ofKeyWord=Keyword("of").setName("of")
-            hasKeyWord=Keyword("has").setName("has")
             value=self.getValueGrammar()
-            identifier=Group(pyparsing_common.identifier)('identifier')   
-            idlink=Group(identifier+identifier+identifier)("idlink")
-            islink=Group(identifier+isKeyWord+identifier+ofKeyWord+identifier)("islink")
-            haslink=Group(identifier+hasKeyWord+identifier+identifier)("haslink")
+            identifier=self.getIdentifier() 
+            
+            idlink=Group(
+                identifier+identifier+identifier
+            ).setParseAction(self.convertToTriple)("idLink")
+            islink=Group(
+                identifier+Suppress('is')+identifier+Suppress('of')+identifier
+            ).setParseAction(self.convertToTriple)("isLink")
+            haslink=Group(
+                identifier+Suppress('has')+identifier+identifier
+            ).setParseAction(self.convertToTriple)("hasLink")
             link=Group(islink|haslink|idlink)("link")
             comment=Group(Char("#")+ZeroOrMore(Word(printables))+LineEnd()|LineEnd())('comment*')
             line=Group(value|link)('line')
@@ -149,6 +234,15 @@ class SiDIFParser(object):
         return self.parseText(sidif,title=title)
         
     def parseWithGrammar(self,grammar,text,title=None):
+        '''
+        parse the given text with the given grammar optionally 
+        labeling the parse with the given title
+        
+        Args:
+            grammar(object): a pyparsing grammar
+            text(str): the text to be parsed
+            title(str): optional title
+        '''
         result=None
         error=None
         if title is None:
@@ -178,6 +272,10 @@ class SiDIFParser(object):
     def printResult(self,pr,indent=''):
         '''
         print the given parseResult recursively
+        
+        Args:
+            pr(object): the ParseResult to print
+            indent(str): initial indentation
         '''
         if isinstance(pr,ParseResults):
             print ("%s%s:" % (indent,pr.getName()))

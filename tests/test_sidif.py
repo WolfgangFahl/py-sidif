@@ -67,6 +67,7 @@ class TestSiDIFParser(unittest.TestCase):
             "1970-01-01 18:35:23",
             "0xff",
             "1",
+            "true",
             "3.1415926",
             "6.02e23",
             "15:46",
@@ -107,6 +108,7 @@ class TestSiDIFParser(unittest.TestCase):
         sp = SiDIFParser(debug=self.debug)
         parsed, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
+        self.debug=True
         if self.debug:
             sp.printResult(parsed)
     
