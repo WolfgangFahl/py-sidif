@@ -204,8 +204,9 @@ class SiDIFParser(object):
                 tokenName=token.getName()
                 if tokenName=="comment":
                     di.addComment(token[0][0])
-                elif tokenName=="lines":
-                    di.addTriple(token[0])
+                elif tokenName=="line":
+                    for triple in token:
+                        di.addTriple(triple)
                 else:
                     self.warn("parseResult %s not handled" % token.getName())
             else:
@@ -308,7 +309,9 @@ class SiDIFParser(object):
             link=Group(islink|haslink|idlink)("link")
             comment=Group(Suppress("#")+ZeroOrMore(Word(printables))+LineEnd()|LineEnd())('comment*')
             line=Group(value|link)('line')
-            links=Group(OneOrMore(line+LineEnd()|comment))('links*')
+            links=Group(
+                OneOrMore(line+LineEnd()|comment)
+            ).setParseAction(self.handleLines)('links*')
             self.grammar=links
         return self.grammar
     
