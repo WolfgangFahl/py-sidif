@@ -12,6 +12,39 @@ import datetime
 import re
 import sys
 
+class DataInterchange():
+    '''
+    a data interchange
+    '''
+    
+    def __init__(self):
+        self.triples=[]
+        self.comments={}
+        pass
+    
+    def addTriple(self,triple):
+        '''
+        add the given triple
+        
+        Args:
+            triple(Triple): the triple to add
+        '''
+        self.triples.append(triple)
+        
+    def addComment(self,comment):
+        '''
+        add the given comment
+        '''
+        pos=len(self.triples)
+        if pos in self.comments:
+            self.warn("comment at pos %d already assigned" %pos)
+        self.comments[pos]=comment
+        
+    def __str__(self):
+        text="%d triples, %d comments" % (len(self.triples),len(self.comments))
+        return text
+
+
 class Triple():
     '''
     a triple (subject,predicate,object)
@@ -160,6 +193,24 @@ class SiDIFParser(object):
         else:
             text=''
         return text
+    
+    def handleLines(self,_tokenStr,_location,tokens):
+        '''
+        handle the line derived
+        '''
+        di=DataInterchange()
+        for token in tokens:
+            if isinstance(token,ParseResults):
+                tokenName=token.getName()
+                if tokenName=="comment":
+                    di.addComment(token[0][0])
+                elif tokenName=="lines":
+                    di.addTriple(token[0])
+                else:
+                    self.warn("parseResult %s not handled" % token.getName())
+            else:
+                self.warn("plain token type %s not handled" % type(token).__name__)
+        return di
     
     def convertToTriple(self,tokenStr,location,group):
         '''
