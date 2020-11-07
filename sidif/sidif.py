@@ -161,33 +161,6 @@ class SiDIFParser(object):
             text=''
         return text
     
-    def dereference(self,tokens,depth=1):
-        '''
-        dereference identifiers and literals from the given tokens
-        
-        Args:
-            tokens(ParseResults): tokens to be handled
-        Returns:
-            string: error Message if any
-        '''
-        if depth>1:
-            errMsg=self.dereference(tokens, depth-1)
-            if errMsg is not None:
-                return errMsg
-        for i,token in enumerate(tokens):
-            if isinstance(token,ParseResults):
-                tokenName=token.getName()
-                msg="%d: %s(%s)=%s" % (i,tokenName,type(token),token)
-                self.warn(msg)
-                if tokenName=="identifier" or tokenName=="literal" or tokenName=='stringLiteral':
-                    if len(token)>0:
-                        tokens[i]=token[0]
-                    else:
-                        tokens[i]=''
-                else:
-                    return msg
-        return None 
-        
     def convertToTriple(self,tokenStr,location,group):
         '''
         convert the given token to a triple
@@ -202,10 +175,6 @@ class SiDIFParser(object):
         tokenCount=len(tokens)
         if tokenCount!=3:
             raise ParseException(tokenStr, location, "invalid triple %s: %d tokens found 3 expected" % (tripleKind,tokenCount))  
-        errorMsg=self.dereference(tokens,2)
-        if errorMsg is not None:
-            #self.warn(errorMsg)
-            raise ParseException(tokenStr,location,errorMsg)
         e1=tokens[0]
         e2=tokens[1]
         e3=tokens[2]
