@@ -306,7 +306,7 @@ class SiDIFParser(object):
                 identifier+Suppress('has')+identifier+identifier
             ).setParseAction(self.convertToTriple)("hasLink")
             link=Group(islink|haslink|idlink)("link")
-            comment=Group(Char("#")+ZeroOrMore(Word(printables))+LineEnd()|LineEnd())('comment*')
+            comment=Group(Suppress("#")+ZeroOrMore(Word(printables))+LineEnd()|LineEnd())('comment*')
             line=Group(value|link)('line')
             links=Group(OneOrMore(line+LineEnd()|comment))('links*')
             self.grammar=links
