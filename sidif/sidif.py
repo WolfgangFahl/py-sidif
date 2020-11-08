@@ -19,7 +19,7 @@ class DataInterchange():
     
     def __init__(self):
         self.triples=[]
-        self.comments={}
+        self.comments=[]
         pass
     
     def addTriple(self,triple):
@@ -35,22 +35,27 @@ class DataInterchange():
         '''
         add the given comment
         '''
-        pos=len(self.triples)
-        if pos in self.comments:
-            self.warn("comment at pos %d already assigned" %pos)
-        self.comments[pos]=comment
+        self.comments.append(comment)
         
     def __str__(self):
         text="%d triples, %d comments" % (len(self.triples),len(self.comments))
         return text
 
+class Comment():
+    '''
+    a comment with it's location
+    '''
+    def __init__(self,comment,location):
+        self.comment=comment
+        self.location=location
 
 class Triple():
     '''
     a triple (subject,predicate,object)
+    with it's location
     '''
     
-    def __init__(self,pSubject,pPredicate,pObject):
+    def __init__(self,pSubject,pPredicate,pObject,location=0):
         '''
         constructor
         
@@ -58,11 +63,13 @@ class Triple():
             pSubject(object): subject
             pPredicate(object): predicate
             pObject(object): object
+            location(int): the location in the source text
             
         '''
         self.s=pSubject
         self.p=pPredicate
         self.o=pObject
+        self.location=0
     
     def dump(self,value):    
         d="%s(%s)" % (value,type(value).__name__)
@@ -206,24 +213,51 @@ class SiDIFParser(object):
             return True
         else:
             return identifier
+        
+    def handleComment(self,location,tokens):
+        '''
+        handle the comment given comment tokens
+        '''
+        #tokenName=tokens.getName()
+        #count=len(tokens)
+        commentText=""
+        for token in tokens:
+            commentText+=''.join(token)
+        comment=Comment(commentText,location)
+        return comment
+        
+    def handleGroup(self,_tokenStr,_location,tokens):
+        tokenName=tokens.getName()
+        token=tokens[0]
+        innerName=token.getName()
+        inner=token[0]
+        return inner
     
+    def addContent(self,di,token,tokenName):
+        if isinstance(token,ParseResults):
+            if tokenName=="links" or tokenName=="comment" or tokenName=="line":
+                if self.debug:
+                    self.warn("%s: %d" % (tokenName,len(token)))
+                tokenName=token.getName()
+                for subtoken in token:
+                    self.addContent(di,subtoken,tokenName)
+            else:
+                self.warn("parseResult %s not handled" % tokenName)
+        elif isinstance(token,Triple):
+            di.addTriple(token)
+        elif isinstance(token,Comment):
+            di.addComment(token)
+        else:
+            if self.debug:
+                self.warn("plain subtoken of %s type %s not handled" % (tokenName,type(token).__name__))
+            pass
+
     def handleLines(self,_tokenStr,_location,tokens):
         '''
         handle the line derived
         '''
         di=DataInterchange()
-        for token in tokens:
-            if isinstance(token,ParseResults):
-                tokenName=token.getName()
-                if tokenName=="comment":
-                    di.addComment(token[0][0])
-                elif tokenName=="line":
-                    for triple in token:
-                        di.addTriple(triple)
-                else:
-                    self.warn("parseResult %s not handled" % token.getName())
-            else:
-                self.warn("plain token type %s not handled" % type(token).__name__)
+        self.addContent(di,tokens,tokens.getName())
         return di
     
     def convertToTriple(self,tokenStr,location,group):
@@ -244,17 +278,17 @@ class SiDIFParser(object):
         e2=tokens[1]
         e3=tokens[2]
         if tripleKind=="isValue":
-            '"Paris" is capital of France'
-            triple=Triple(e1,e2,e3)
+            #'"Paris" is capital of France'
+            triple=Triple(e1,e2,e3,location)
         elif tripleKind=="idLink":
-            'Paris capital France'
-            triple=Triple(e1,e2,e3)
+            #'Paris capital France'
+            triple=Triple(e1,e2,e3,location)
         elif tripleKind=="isLink":
-            'Paris is capital of France'
-            triple=Triple(e1,e2,e3)
+            #'Paris is capital of France'
+            triple=Triple(e1,e2,e3,location)
         elif tripleKind=="hasLink":
-            'France has capital Paris'
-            triple=Triple(e3,e2,e1)
+            #'France has capital Paris'
+            triple=Triple(e3,e2,e1,location)
         else:
             raise ParseException(tokenStr, location, "invalid tripleKind %s" %tripleKind)  
         return triple
@@ -269,7 +303,7 @@ class SiDIFParser(object):
         integerLiteral=pyparsing_common.signed_integer('integerLiteral')
         floatingPointLiteral=Group(
             pyparsing_common.sci_real|pyparsing_common.real
-        ).setParseAction(lambda tokens: tokens[0])('floatingPointLiteral')
+        ).setParseAction(self.handleGroup)('floatingPointLiteral')
         timeLiteral=Regex(r"[0-9]{2}:[0-9]{2}(:[0-9]{2})?").setParseAction(self.convertToTime)('timeLiteral')
         dateLiteral=pyparsing_common.iso8601_date.copy().setParseAction(pyparsing_common.convertToDate())('dateLiteral')
         dateTimeLiteral=Group(
@@ -278,10 +312,9 @@ class SiDIFParser(object):
         stringLiteral=Group(
             Suppress('"')+ZeroOrMore(CharsNotIn('"')|LineEnd())+Suppress('"')
         ).setParseAction(self.handleStringLiteral)('stringLiteral')
-        # setParseAction(lambda tokens: tokens[0] if len(tokens)>0 else '' )
         literal=Group(
             uri | stringLiteral |  booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral 
-        ).setParseAction(lambda tokens: tokens[0])("literal")
+        ).setParseAction(self.handleGroup)("literal")
         return literal
     
     def getIdentifier(self):
@@ -315,9 +348,13 @@ class SiDIFParser(object):
             haslink=Group(
                 identifier+Suppress('has')+identifier+identifier
             ).setParseAction(self.convertToTriple)("hasLink")
-            link=Group(islink|haslink|idlink)("link")
-            comment=Group(Suppress("#")+ZeroOrMore(Word(printables))+LineEnd()|LineEnd())('comment*')
-            line=Group(value|link)('line')
+            link=Group(islink|haslink|idlink).setParseAction(self.handleGroup)("link")
+            comment=Group(
+                Suppress("#")+ZeroOrMore(Word(printables))+LineEnd()|LineEnd()
+            ).setParseAction(self.handleComment)('comment*')
+            line=Group(
+                value|link
+            ).setParseAction(self.handleGroup)('line')
             links=Group(
                 OneOrMore(line+LineEnd()|comment)
             ).setParseAction(self.handleLines)('links*')

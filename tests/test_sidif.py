@@ -97,7 +97,7 @@ class TestSiDIFParser(unittest.TestCase):
              ]
             }
         ]
-        self.debug=True
+        #self.debug=True
         for i, example in enumerate(examples):
             grammar = example['grammar']
             title = example['title']
@@ -115,7 +115,7 @@ class TestSiDIFParser(unittest.TestCase):
         sp = SiDIFParser(debug=self.debug)
         parsed, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
-        self.debug=True
+        #self.debug=True
         if self.debug:
             sp.printResult(parsed)
     
@@ -124,33 +124,40 @@ class TestSiDIFParser(unittest.TestCase):
         test Examples from org.sidif.triplestore
         '''
         sp = SiDIFParser(debug=self.debug)
-        for example in [
-            "example1.sidif", 
-            "example2.sidif", 
-            "familyTree.sidif", 
-            "graph1.sidif",
-            "json_ld_manu_sporny.sidif",
-            "notation3_TonyBenn.sidif",
-            "presentation.sidif",
-            "rdf_cd.sidif",
-            "rdf_json_anna_wilder.sidif",
-            "roles.sidif",
-            "royal92-14.sidif",
+        for example,exTriples,exComments in [
+            ("example1.sidif",11,0), 
+            ("example2.sidif",15,0), 
+            ("familyTree.sidif",51,0), 
+            ("graph1.sidif",7,1),
+            ("json_ld_manu_sporny.sidif",16,1),
+            ("notation3_TonyBenn.sidif",4,1),
+            ("presentation.sidif",546,67),
+            ("rdf_cd.sidif",22,0),
+            ("rdf_json_anna_wilder.sidif",8,22),
+            ("roles.sidif",16,1),
+            ("royal92-14.sidif",210,19),
             # 62770 triples ...
             # "royal92.sidif",
-            "trig_bob_alice.sidif",
-            "triple1.sidif", 
-            "turtle_spiderman.sidif", 
-            "typetest.sidif", 
-            "utf8.sidif", 
-            "vcard.sidif"
+            ("trig_bob_alice.sidif",11,24),
+            ("triple1.sidif", 6,0),
+            ("turtle_spiderman.sidif",8,7), 
+            ("typetest.sidif",62,4) ,
+            ("utf8.sidif", 3,1),
+            ("vcard.sidif",31,3),
         ]:
             url = "%s/%s" % (self.baseUrl, example)
             result, error = sp.parseUrl(url, title=example)
             self.assertTrue(error is None)
-            self.debug=True
-            if self.debug and result:
+            self.assertTrue('links' in result)
+            di=result['links'][0]
+            foundTriples=len(di.triples)
+            foundComments=len(di.comments)
+            if foundTriples!=exTriples or foundComments!=exComments:
+                sp.warn("%s: expected %d/%d triples/comments but found %d/%d" %(example,exTriples,exComments,foundTriples,foundComments))
                 sp.printResult(result)
+                
+            self.assertEqual(exTriples,foundTriples)
+            self.assertEqual(exComments,foundComments)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testSiDIFParser']
