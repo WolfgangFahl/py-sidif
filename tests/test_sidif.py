@@ -68,6 +68,7 @@ class TestSiDIFParser(unittest.TestCase):
             "0xff",
             "1",
             "true",
+            "false",
             "3.1415926",
             "6.02e23",
             "15:46",
@@ -78,8 +79,13 @@ class TestSiDIFParser(unittest.TestCase):
             "sidifs": [
                 "1 is ordinal of it",
                 "2020-10-15 is startDate of it",
+                "2006-05-17 09:00:15 is timeStamp of it",
+                "0xc0 is hexValue of it",
+                "3015.76 is floatValue of it",
+                "07:59:46 is time of it",
                 "http://example.org/pic.jpg is depiction of it",
-                '"" is subtitle of it'
+                '"" is subtitle of it',
+                #'false is started of it'
             ]
         },{
             "grammar": sp.getGrammar(),
@@ -119,8 +125,12 @@ class TestSiDIFParser(unittest.TestCase):
         '''
         sp = SiDIFParser(debug=self.debug)
         for example in [
-            "example1.sidif", "example2.sidif", "familyTree.sidif", "graph1.sidif",
-            "json_ld_manu_sporny.sidif","notation3_TonyBenn.sidif",
+            "example1.sidif", 
+            "example2.sidif", 
+            "familyTree.sidif", 
+            "graph1.sidif",
+            "json_ld_manu_sporny.sidif",
+            "notation3_TonyBenn.sidif",
             "presentation.sidif",
             "rdf_cd.sidif",
             "rdf_json_anna_wilder.sidif",
@@ -129,7 +139,11 @@ class TestSiDIFParser(unittest.TestCase):
             # 62770 triples ...
             # "royal92.sidif",
             "trig_bob_alice.sidif",
-            "triple1.sidif", "turtle_spiderman.sidif", "typetest.sidif", "utf8.sidif", "vcard.sidif"
+            "triple1.sidif", 
+            "turtle_spiderman.sidif", 
+            "typetest.sidif", 
+            "utf8.sidif", 
+            "vcard.sidif"
         ]:
             url = "%s/%s" % (self.baseUrl, example)
             result, error = sp.parseUrl(url, title=example)

@@ -3,7 +3,7 @@ Created on 06.11.2020
 
 @author: wf
 '''
-from pyparsing import Char,CharsNotIn,Group,LineEnd,OneOrMore,Optional
+from pyparsing import CharsNotIn,Group,LineEnd,OneOrMore,Optional
 from pyparsing import ParserElement,ParseException,ParseResults,Regex,Suppress,Word,ZeroOrMore
 from pyparsing import hexnums,tokenMap,printables,pyparsing_common
 
@@ -194,6 +194,19 @@ class SiDIFParser(object):
             text=''
         return text
     
+    def handleIdentifier(self,_tokenStr,_location,tokens):
+        '''
+        handle identifiers
+        '''
+        identifier=tokens['identifier'][0]
+        # workaround true/false not being handled as keywords
+        if identifier=='false':
+            return False
+        elif identifier=='true':
+            return True
+        else:
+            return identifier
+    
     def handleLines(self,_tokenStr,_location,tokens):
         '''
         handle the line derived
@@ -252,12 +265,8 @@ class SiDIFParser(object):
         '''
         uri=Regex(SiDIFParser.getUriRegexp())('uri')
         booleanLiteral=Regex(r"true|false").setParseAction(self.convertToBoolean)('boolean')
-        hexLiteral=Group(
-            Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16)))
-        )('hexLiteral')
-        integerLiteral=Group(
-            pyparsing_common.signed_integer
-        ).setParseAction(lambda tokens: tokens[0])('integerLiteral')
+        hexLiteral=(Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
+        integerLiteral=pyparsing_common.signed_integer('integerLiteral')
         floatingPointLiteral=Group(
             pyparsing_common.sci_real|pyparsing_common.real
         ).setParseAction(lambda tokens: tokens[0])('floatingPointLiteral')
@@ -271,14 +280,14 @@ class SiDIFParser(object):
         ).setParseAction(self.handleStringLiteral)('stringLiteral')
         # setParseAction(lambda tokens: tokens[0] if len(tokens)>0 else '' )
         literal=Group(
-            uri | stringLiteral | booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral 
+            uri | stringLiteral |  booleanLiteral | hexLiteral | dateTimeLiteral | timeLiteral | floatingPointLiteral| integerLiteral 
         ).setParseAction(lambda tokens: tokens[0])("literal")
         return literal
     
     def getIdentifier(self):
         identifier=Group(
             pyparsing_common.identifier
-        ).setParseAction(lambda tokens: tokens[0])('identifier')   
+        ).setParseAction(self.handleIdentifier)('identifier')   
         return identifier
     
     def getValueGrammar(self):
