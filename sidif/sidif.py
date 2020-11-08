@@ -4,7 +4,8 @@ Created on 06.11.2020
 @author: wf
 '''
 from pyparsing import CharsNotIn,Group,LineEnd,oneOf,OneOrMore,Optional
-from pyparsing import ParserElement,ParseException,ParseResults,Regex,Suppress,Word,ZeroOrMore
+from pyparsing import ParserElement,ParseException,ParseFatalException
+from pyparsing import ParseResults,Regex,Suppress,Word,ZeroOrMore
 from pyparsing import hexnums,tokenMap,printables,pyparsing_common
 
 from urllib.request import urlopen
@@ -158,18 +159,22 @@ class SiDIFParser(object):
             timeResult=dt.time()
             return timeResult
         except ValueError as ve:
-            raise ParseException(tokenStr, location, str(ve))
+            raise ParseFatalException(tokenStr, location, str(ve))
         
     def convertToBoolean(self,tokenStr,location,token):
         '''
         convert the token to a boolean
         '''
-        if len(token)==1:
+        try:
+            tokenStr=token[0]
             if tokenStr=="true":
                 return True
             elif tokenStr=="false":
                 return False
-        raise ParseException(tokenStr, location, "invalid boolean %s" % tokenStr)
+        except Exception as pe:
+            msg=str(pe)
+        # https://stackoverflow.com/questions/13393432/raise-a-custom-exception-in-pyparsing
+        raise ParseFatalException(tokenStr, location, "invalid boolean %s:%s" % (tokenStr,msg))
     
     def handleDateTimeLiteral(self,tokenStr,location,group):
         '''
@@ -185,7 +190,7 @@ class SiDIFParser(object):
             dt=datetime.datetime(date.year,date.month,date.day,time.hour,time.minute,time.second)
             return dt
         else:
-            raise ParseException(tokenStr, location, "invalid DateTimeLiteral %s" % tokenStr)
+            raise ParseFatalException(tokenStr, location, "invalid DateTimeLiteral %s" % tokenStr)
             
     def handleStringLiteral(self,_tokenStr,_location,tokens):
         '''
@@ -206,13 +211,7 @@ class SiDIFParser(object):
         handle identifiers
         '''
         identifier=tokens['identifier'][0]
-        # workaround true/false not being handled as keywords
-        if identifier=='false':
-            return False
-        elif identifier=='true':
-            return True
-        else:
-            return identifier
+        return identifier
         
     def handleComment(self,location,tokens):
         '''
@@ -290,7 +289,7 @@ class SiDIFParser(object):
             #'France has capital Paris'
             triple=Triple(e3,e2,e1,location)
         else:
-            raise ParseException(tokenStr, location, "invalid tripleKind %s" %tripleKind)  
+            raise ParseFatalException(tokenStr, location, "invalid tripleKind %s" %tripleKind)  
         return triple
     
     def getLiteral(self):

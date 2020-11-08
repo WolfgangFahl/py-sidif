@@ -4,7 +4,10 @@ Created on 2020-11-08
 @author: wf
 '''
 import unittest
-from pyparsing import oneOf, ParseException, pyparsing_common,Suppress
+import datetime
+from sidif.sidif import SiDIFParser
+from pyparsing import oneOf, CharsNotIn,Group,LineEnd,Regex,Optional,ParseException,ParseFatalException, Word,ZeroOrMore
+from pyparsing import hexnums,pyparsing_common,tokenMap,Suppress
 
 class TestPyParsing(unittest.TestCase):
     '''
@@ -12,12 +15,12 @@ class TestPyParsing(unittest.TestCase):
     '''
 
     def setUp(self):
+        self.debug=False
         pass
 
 
     def tearDown(self):
         pass
-
 
     def testBoolean(self):
         '''
@@ -31,9 +34,13 @@ class TestPyParsing(unittest.TestCase):
         identifier=pyparsing_common.identifier
         
         boolStatement=booleanLiteral+Suppress("is")+identifier+Suppress('of')+identifier
+        sp=SiDIFParser()
+        vg=sp.getValueGrammar()
+        sp.showError=self.debug
         for i,boolValue in enumerate(boolValues):
             boolInput=("%s is value of variable") % boolValue
-            print("testing %s/%s" % (boolValue,boolInput))
+            if self.debug:
+                print("testing %s/%s" % (boolValue,boolInput))
             try:
                 result=booleanLiteral.parseString(boolValue)
                 boolResult=result[0]
@@ -45,8 +52,16 @@ class TestPyParsing(unittest.TestCase):
                 #print ("%r %s %s" % (result[0],result[1],result[2]))
             except ParseException:
                 boolInputResult=None
+            result,error=sp.parseWithGrammar(vg,boolInput,"valueGrammar")
+            if error:
+                vgResult=None
+            else:
+                if self.debug:
+                    sp.printResult(result)
+                vgResult=result[0].s
             self.assertEqual(expected[i],boolResult)
             self.assertEqual(expected[i],boolInputResult)
+            self.assertEqual(expected[i],vgResult)
         pass
 
 

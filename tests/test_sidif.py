@@ -79,7 +79,7 @@ class TestSiDIFParser(unittest.TestCase):
             "title": "Value",
             "sidifs": [
                 "1 is ordinal of it",
-                #'false is started of it',
+                'false is started of it',
                 "2020-10-15 is startDate of it",
                 "2006-05-17 09:00:15 is timeStamp of it",
                 "0xc0 is hexValue of it",
