@@ -72,20 +72,21 @@ class TestSiDIFParser(unittest.TestCase):
             "3.1415926",
             "6.02e23",
             "15:46",
-            "http://example.org/pic.jpg",]
+            "http://example.org/pic.jpg"
+            ]
         },{
             "grammar": sp.getValueGrammar(),
             "title": "Value",
             "sidifs": [
                 "1 is ordinal of it",
+                #'false is started of it',
                 "2020-10-15 is startDate of it",
                 "2006-05-17 09:00:15 is timeStamp of it",
                 "0xc0 is hexValue of it",
                 "3015.76 is floatValue of it",
                 "07:59:46 is time of it",
                 "http://example.org/pic.jpg is depiction of it",
-                '"" is subtitle of it',
-                #'false is started of it'
+                '"" is subtitle of it'
             ]
         },{
             "grammar": sp.getGrammar(),
@@ -97,7 +98,7 @@ class TestSiDIFParser(unittest.TestCase):
              ]
             }
         ]
-        #self.debug=True
+        self.debug=True
         for i, example in enumerate(examples):
             grammar = example['grammar']
             title = example['title']

@@ -3,7 +3,7 @@ Created on 06.11.2020
 
 @author: wf
 '''
-from pyparsing import CharsNotIn,Group,LineEnd,OneOrMore,Optional
+from pyparsing import CharsNotIn,Group,LineEnd,oneOf,OneOrMore,Optional
 from pyparsing import ParserElement,ParseException,ParseResults,Regex,Suppress,Word,ZeroOrMore
 from pyparsing import hexnums,tokenMap,printables,pyparsing_common
 
@@ -298,7 +298,7 @@ class SiDIFParser(object):
         get the literal sub Grammar
         '''
         uri=Regex(SiDIFParser.getUriRegexp())('uri')
-        booleanLiteral=Regex(r"true|false").setParseAction(self.convertToBoolean)('boolean')
+        booleanLiteral=oneOf(["true","false"]).setParseAction(self.convertToBoolean)('boolean')
         hexLiteral=(Suppress("0x")+(Word(hexnums).setParseAction(tokenMap(int, 16))))('hexLiteral')
         integerLiteral=pyparsing_common.signed_integer('integerLiteral')
         floatingPointLiteral=Group(
