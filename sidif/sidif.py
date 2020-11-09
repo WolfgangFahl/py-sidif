@@ -38,6 +38,55 @@ class DataInterchange():
         '''
         self.comments.append(comment)
         
+    def toDictOfDicts(self):
+        '''
+        convert me to a dict of dicts 
+        following the "it" semantics
+        
+        e.g.
+            JohnDoe isA Person
+            "John" is firstName of it
+            "Doe"  is lastName of it
+            35 is age of it
+            
+        will have a pseudo - triple representation of
+            JohnDoe isA Person
+            John firstName it
+            Doe lastName it
+            35 age it
+            
+        leading to a dict {
+          'JohnDoe': { 
+              'isA': Person, 
+              'firstName': John, 
+              'lastName': 'Doe'
+              'age': 35
+        }
+        
+        Return:
+            dict: the dict of dicts representation of the triples found
+        '''
+        # the dict of dicts
+        dod={}
+        # we start with not "it" reference
+        it=None
+        # loop over all triples
+        for triple in self.triples:
+            # if this is an "it" reference 
+            if triple.o=="it":
+                if it is None:
+                    raise Exception("Invalid it reference %s at location %d" % (triple,triple.location))
+                o=triple.s
+            else:
+                o=triple.o
+                if triple.s in dod:
+                    it=dod[triple.s]
+                else:
+                    it={}
+                    dod[triple.s]=it
+            it[triple.p]=o
+        return dod
+        
     def __str__(self):
         text="%d triples, %d comments" % (len(self.triples),len(self.comments))
         return text
@@ -52,8 +101,11 @@ class Comment():
 
 class Triple():
     '''
-    a triple (subject,predicate,object)
+    a pseudo - triple (subject,predicate,object)
     with it's location
+    
+    due to the "it" syntax the subject may contain the object and the real
+    subject is the latest non it-reference
     '''
     
     def __init__(self,pSubject,pPredicate,pObject,location=0):
@@ -70,7 +122,7 @@ class Triple():
         self.s=pSubject
         self.p=pPredicate
         self.o=pObject
-        self.location=0
+        self.location=location
     
     def dump(self,value):    
         d="%s(%s)" % (value,type(value).__name__)
@@ -291,6 +343,7 @@ class SiDIFParser(object):
         else:
             raise ParseFatalException(tokenStr, location, "invalid tripleKind %s" %tripleKind)  
         return triple
+        
     
     def getLiteral(self):
         '''

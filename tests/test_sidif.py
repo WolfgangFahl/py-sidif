@@ -4,7 +4,7 @@ Created on 2020-11-06
 @author: wf
 '''
 import unittest
-from sidif.sidif import SiDIFParser
+from sidif.sidif import SiDIFParser, DataInterchange
 
 class TestSiDIFParser(unittest.TestCase):
     '''
@@ -116,9 +116,14 @@ class TestSiDIFParser(unittest.TestCase):
         sp = SiDIFParser(debug=self.debug)
         parsed, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
-        #self.debug=True
         if self.debug:
             sp.printResult(parsed)
+        dif=parsed[0]
+        self.assertTrue(isinstance(dif, DataInterchange))
+        dod=dif.toDictOfDicts()
+        if (self.debug):
+            print(dod)
+        self.assertEqual(40,len(dod))          
     
     def testExamples(self):
         '''
