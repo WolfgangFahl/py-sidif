@@ -185,10 +185,15 @@ class TestSiDIFParser(unittest.TestCase):
             print(wsdict)
         dif=DataInterchange.ofDict(wsdict,context="ceurws")
         sidifStr=dif.asSiDIF()
-        print(sidifStr)
+        if self.debug:
+            print(sidifStr)
+        self.assertTrue("workshop isA Topic" in sidifStr)
+        self.assertTrue("homepage isA Property" in sidifStr)
         uml=PlantUml(title="CEUR-WS",copyRight="© Christoph Lange and contributors 2012–2020")
         uml.fromDIF(dif)
-        print(uml)
+        if self.debug:
+            print(uml)
+        self.assertTrue('''workshop " 1" -- "editors *" editor''' in uml.uml)
             
     def testIssue5(self):
         '''
