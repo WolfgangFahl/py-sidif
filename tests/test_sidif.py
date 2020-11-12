@@ -177,7 +177,8 @@ class TestSiDIFParser(unittest.TestCase):
         convert sidif to plantuml #5
         '''
         dif=self.getPresentation()
-        uml=PlantUml.ofDIF(dif)
+        uml=PlantUml(title="Presentation",copyRight="© BITPlan GmbH 2015-2020")
+        uml.fromDIF(dif)
         print (uml)
 
 if __name__ == "__main__":
