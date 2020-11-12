@@ -180,8 +180,8 @@ hide Circle
             link=links[linkKey]
             sourceMany="*" if link['sourceMultiple'] else "1"
             targetMany="*" if link['targetMultiple'] else "1"
-            sourceRole=link['sourceRole']
-            targetRole=link['targetRole']
+            sourceRole=link['sourceRole'] if 'sourceRole' in link else ''
+            targetRole=link['targetRole'] if 'targetRole' in link else ''
             source=link["source"]
             target=link["target"]
             

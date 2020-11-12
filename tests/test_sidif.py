@@ -6,6 +6,8 @@ Created on 2020-11-06
 import unittest
 from sidif.sidif import SiDIFParser, DataInterchange
 from sidif.uml import PlantUml
+from urllib.request import urlopen
+import xmltodict
 
 class TestSiDIFParser(unittest.TestCase):
     '''
@@ -170,6 +172,23 @@ class TestSiDIFParser(unittest.TestCase):
                 
             self.assertEqual(exTriples,foundTriples)
             self.assertEqual(exComments,foundComments)
+            
+    def testIssue4(self):
+        '''
+        https://github.com/WolfgangFahl/py-sidif/issues/4
+        convert dict tree to sidif
+        '''
+        uri="https://raw.githubusercontent.com/semstats/semstats.github.io/master/2019/ceur/workshop.xml"
+        xml=urlopen(uri).read().decode()
+        wsdict=xmltodict.parse(xml)
+        if self.debug:
+            print(wsdict)
+        dif=DataInterchange.ofDict(wsdict,context="ceurws")
+        sidifStr=dif.asSiDIF()
+        print(sidifStr)
+        uml=PlantUml(title="CEUR-WS",copyRight="© Christoph Lange and contributors 2012–2020")
+        uml.fromDIF(dif)
+        print(uml)
             
     def testIssue5(self):
         '''

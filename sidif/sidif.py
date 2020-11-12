@@ -23,6 +23,50 @@ class DataInterchange():
         self.comments=[]
         pass
     
+    @staticmethod 
+    def ofDict(pDict,context="context"):
+        dif=DataInterchange()
+        dif.addTriple(Triple(context,"isA","Context"))
+        dif.addTriple(Triple(context,"name","it"))
+        dif.addSchemaFromDict(pDict,context,context,"context")
+        return dif
+        
+    def addSchemaFromDict(self,pDict,context,parent,parentName):    
+        '''
+        add schema information from the given dict
+        '''
+        if not isinstance(pDict,dict):
+            return
+        for key in pDict.keys():
+            value=pDict[key]
+            if isinstance(value,dict):
+                # https://stackoverflow.com/questions/21062781/shortest-way-to-get-first-item-of-ordereddict-in-python-3
+                if len(value)==1 and isinstance(list(value.values())[0],list):
+                    listNode=list(value.values())[0]
+                    firstListNode=listNode[0]
+                    listKey=list(value.keys())[0]
+                    self.addTriple(Triple(listKey,"isA","Topic"))
+                    self.addTriple(Triple(listKey,"name","it"))
+                    self.addTriple(Triple(context,"context","it"))
+                    self.addSchemaFromDict(firstListNode,context,listKey, "Topic")
+                    self.addTriple(Triple(key,"isA","TopicLink"))
+                    self.addTriple(Triple(key,"name","it"))
+                    self.addTriple(Triple(listKey,"target","it"))
+                    self.addTriple(Triple(parent,"source","it"))
+                    self.addTriple(Triple(False,"sourceMultiple","it"))
+                    self.addTriple(Triple(len(listNode)>1,"targetMultiple","it"))
+                else:
+                    self.addTriple(Triple(key,"isA","Topic"))
+                    self.addTriple(Triple(key,"name","it"))
+                    self.addTriple(Triple(parent,parentName,"it"))
+                    self.addSchemaFromDict(value,context,key,"Topic")
+            else:
+                self.addTriple(Triple(key,"isA","Property"))
+                self.addTriple(Triple(key,"name","it"))  
+                valueType=type(value).__name__
+                self.addTriple(Triple(valueType,"type","it"))  
+                self.addTriple(Triple(parent,parentName,"it"))
+    
     def addTriple(self,triple):
         '''
         add the given triple
@@ -38,6 +82,15 @@ class DataInterchange():
         '''
         self.comments.append(comment)
         
+    def asSiDIF(self):
+        '''
+        convert me to SiDIF notation
+        '''
+        sidifStr=""
+        for triple in self.triples:
+            sidifStr+="%s\n" % (triple.asSiDIF())
+        return sidifStr
+    
     def toDictOfDicts(self):
         '''
         convert me to a dict of dicts 
@@ -127,6 +180,10 @@ class Triple():
     def dump(self,value):    
         d="%s(%s)" % (value,type(value).__name__)
         return d
+    
+    def asSiDIF(self):
+        line="%s %s %s" % (self.s,self.p,self.o)
+        return line
     
     def __str__(self):
         text="{%s,%s,%s}" % (self.dump(self.s),self.dump(self.p),self.dump(self.o))
