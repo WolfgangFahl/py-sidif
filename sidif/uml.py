@@ -153,8 +153,8 @@ hide Circle
             if self.copyRight is None:
                 copyRight=""
             else:
-                copyRight="\n%s" % copyright
-            self.uml+="title\n%s%send title\n" % (self.title,copyRight)
+                copyRight="\n%s" % self.copyRight
+            self.uml+="title\n%s%s\nend title\n" % (self.title,copyRight)
         packages=umlDict['packages']
         for packageKey in packages.keys():
             package=packages[packageKey]
