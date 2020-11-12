@@ -185,7 +185,7 @@ hide Circle
             source=link["source"]
             target=link["target"]
             
-            self.uml+="""%s "%s %s" -- "%s %s" %s""" % (source,sourceRole,sourceMany,targetRole,targetMany,target)
+            self.uml+="""%s "%s %s" -- "%s %s" %s\n""" % (source,sourceRole,sourceMany,targetRole,targetMany,target)
         if self.withSkin:
             self.uml+=PlantUml.skinparams    
         return self.uml

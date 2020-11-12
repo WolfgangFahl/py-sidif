@@ -41,6 +41,17 @@ class DataInterchange():
         self.addTriple(Triple(sourceMultiple,"sourceMultiple","it"))
         self.addTriple(Triple(targetMultiple,"targetMultiple","it"))
         
+    def addTopic(self,name,context):
+        topicId=self.fixId(name)
+        self.addTriple(Triple(topicId,"isA","Topic"))
+        self.addTriple(Triple(name,"name","it"))
+        self.addTriple(Triple(context,"context","it"))
+        
+    def fixId(self,name):
+        fixed=re.sub(r"[#@]","",name)
+        return fixed
+        
+        
     def addSchemaFromDict(self,pDict,context,parent,parentName):    
         '''
         add schema information from the given dict
@@ -62,20 +73,19 @@ class DataInterchange():
                     listNode=list(value.values())[0]
                     firstListNode=listNode[0]
                     listKey=list(value.keys())[0]
-                    self.addTriple(Triple(listKey,"isA","Topic"))
-                    self.addTriple(Triple(listKey,"name","it"))
-                    self.addTriple(Triple(context,"context","it"))
+                    self.addTopic(listKey,context)
                     self.addSchemaFromDict(firstListNode,context,listKey, "Topic")
                     self.addLink(key, parent, listKey, "", key, False, len(listNode)>1)
                 else:
                     # standalone topic
                     linkKey="%s%s" % (parent,key)
-                    self.addTriple(Triple(key,"isA","Topic"))
-                    self.addTriple(Triple(key,"name","it"))
-                    self.addTriple(Triple(parent,parentName,"it"))
+                    self.addTopic(key,context)
                     self.addSchemaFromDict(value,context,key,"Topic")
+                    if parentName!="context":
+                        self.addLink(linkKey,parent,key,"","",False,False)
             else:
-                self.addTriple(Triple(key,"isA","Property"))
+                propId=self.fixId(key)
+                self.addTriple(Triple(propId,"isA","Property"))
                 self.addTriple(Triple(key,"name","it"))  
                 valueType=type(value).__name__
                 self.addTriple(Triple(valueType,"type","it"))  
@@ -195,8 +205,20 @@ class Triple():
         d="%s(%s)" % (value,type(value).__name__)
         return d
     
+    def asLiteral(self,value):
+        if isinstance(value,str):
+            return '"%s"' % value
+        elif isinstance(value,bool):
+            return "true" if value else "false"
+        else:
+            return "%s" % value
+    
     def asSiDIF(self):
-        line="%s %s %s" % (self.s,self.p,self.o)
+        if self.o=="it":
+            literal=self.asLiteral(self.s)
+            line='%s is %s of it' % (literal,self.p)
+        else:
+            line="%s %s %s" % (self.s,self.p,self.o)
         return line
     
     def __str__(self):
