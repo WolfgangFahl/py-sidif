@@ -5,6 +5,7 @@ Created on 2020-11-06
 '''
 import unittest
 from sidif.sidif import SiDIFParser, DataInterchange
+from sidif.uml import PlantUml
 
 class TestSiDIFParser(unittest.TestCase):
     '''
@@ -107,18 +108,23 @@ class TestSiDIFParser(unittest.TestCase):
                 if self.debug and result:
                     print(sp.printResult(result))
                 self.assertIsNone(error)
+                
+    def getPresentation(self):
+        url = "%s/presentation.sidif" % (self.baseUrl)
+        sp = SiDIFParser(debug=self.debug)
+        parsed, error = sp.parseUrl(url, title="Presentation")
+        self.assertTrue(error is None)
+        self.debug=True
+        if self.debug:
+            sp.printResult(parsed)
+        dif=parsed[0]
+        return dif
             
     def testIsA(self):
         '''
         test the isA parsing
         '''
-        url = "%s/presentation.sidif" % (self.baseUrl)
-        sp = SiDIFParser(debug=self.debug)
-        parsed, error = sp.parseUrl(url, title="Presentation")
-        self.assertTrue(error is None)
-        if self.debug:
-            sp.printResult(parsed)
-        dif=parsed[0]
+        dif=self.getPresentation()
         self.assertTrue(isinstance(dif, DataInterchange))
         dod=dif.toDictOfDicts()
         if (self.debug):
@@ -164,6 +170,15 @@ class TestSiDIFParser(unittest.TestCase):
                 
             self.assertEqual(exTriples,foundTriples)
             self.assertEqual(exComments,foundComments)
+            
+    def testIssue5(self):
+        '''
+        https://github.com/WolfgangFahl/py-sidif/issues/5
+        convert sidif to plantuml #5
+        '''
+        dif=self.getPresentation()
+        uml=PlantUml.ofDIF(dif)
+        print (uml)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testSiDIFParser']
