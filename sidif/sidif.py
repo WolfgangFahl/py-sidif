@@ -30,6 +30,16 @@ class DataInterchange():
         dif.addTriple(Triple(context,"name","it"))
         dif.addSchemaFromDict(pDict,context,context,"context")
         return dif
+    
+    def addLink(self,name,source,target,sourceRole,targetRole,sourceMultiple,targetMultiple):
+        self.addTriple(Triple(name,"isA","TopicLink"))
+        self.addTriple(Triple(name,"name","it"))
+        self.addTriple(Triple(target,"target","it"))
+        self.addTriple(Triple(source,"source","it"))
+        self.addTriple(Triple(targetRole,"targetRole","it"))
+        self.addTriple(Triple(sourceRole,"sourceRole","it"))
+        self.addTriple(Triple(sourceMultiple,"sourceMultiple","it"))
+        self.addTriple(Triple(targetMultiple,"targetMultiple","it"))
         
     def addSchemaFromDict(self,pDict,context,parent,parentName):    
         '''
@@ -37,9 +47,16 @@ class DataInterchange():
         '''
         if not isinstance(pDict,dict):
             return
-        for key in pDict.keys():
+        # make sure we work on properties first then other topics
+        sortedKeys=sorted(pDict.keys(), key=lambda x: isinstance(pDict[x],dict))
+        # loop over nodes
+        for key in sortedKeys:
             value=pDict[key]
+            # is the subnode a Topic or a Property?
             if isinstance(value,dict):
+                # if there is an intermediate node
+                # then there is a topic link
+                # eg. workshop - events - event
                 # https://stackoverflow.com/questions/21062781/shortest-way-to-get-first-item-of-ordereddict-in-python-3
                 if len(value)==1 and isinstance(list(value.values())[0],list):
                     listNode=list(value.values())[0]
@@ -49,13 +66,10 @@ class DataInterchange():
                     self.addTriple(Triple(listKey,"name","it"))
                     self.addTriple(Triple(context,"context","it"))
                     self.addSchemaFromDict(firstListNode,context,listKey, "Topic")
-                    self.addTriple(Triple(key,"isA","TopicLink"))
-                    self.addTriple(Triple(key,"name","it"))
-                    self.addTriple(Triple(listKey,"target","it"))
-                    self.addTriple(Triple(parent,"source","it"))
-                    self.addTriple(Triple(False,"sourceMultiple","it"))
-                    self.addTriple(Triple(len(listNode)>1,"targetMultiple","it"))
+                    self.addLink(key, parent, listKey, "", key, False, len(listNode)>1)
                 else:
+                    # standalone topic
+                    linkKey="%s%s" % (parent,key)
                     self.addTriple(Triple(key,"isA","Topic"))
                     self.addTriple(Triple(key,"name","it"))
                     self.addTriple(Triple(parent,parentName,"it"))
