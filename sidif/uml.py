@@ -108,9 +108,10 @@ hide Circle
         '''
         return the given DataInterchange as a UML Dict
         '''
-        uml={'packages':{}}
+        uml={'packages':{},'topiclinks':{}}
         for triple in dif.triples:
-            print(triple)
+            if self.debug:
+                print(triple)
             if triple.p=="isA":
                 itkey=triple.s
                 if triple.o=="Context":
@@ -118,6 +119,10 @@ hide Circle
                     packages=uml['packages']
                     packages[itkey]={"classes":{}}
                     it=packages[itkey]
+                elif triple.o=="TopicLink":
+                    links=uml['topiclinks']
+                    links[itkey]={}
+                    it=links[itkey]
                 elif  triple.o=="Topic":
                     classKey=itkey
                     classes=packages[packageKey]['classes']
@@ -170,6 +175,17 @@ hide Circle
                     self.uml+="    %s:%s\n" % (prop['name'],prop['type'])
                 self.uml+="  }\n"
             self.uml+="}\n"        
+        links=umlDict['topiclinks']
+        for linkKey in links.keys():
+            link=links[linkKey]
+            sourceMany="*" if link['sourceMultiple'] else "1"
+            targetMany="*" if link['targetMultiple'] else "1"
+            sourceRole=link['sourceRole']
+            targetRole=link['targetRole']
+            source=link["source"]
+            target=link["target"]
+            
+            self.uml+="""%s "%s %s" -- "%s %s" %s""" % (source,sourceRole,sourceMany,targetRole,targetMany,target)
         if self.withSkin:
             self.uml+=PlantUml.skinparams    
         return self.uml

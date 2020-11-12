@@ -99,7 +99,7 @@ class TestSiDIFParser(unittest.TestCase):
              ]
             }
         ]
-        self.debug=True
+        #self.debug=True
         for i, example in enumerate(examples):
             grammar = example['grammar']
             title = example['title']
@@ -114,7 +114,7 @@ class TestSiDIFParser(unittest.TestCase):
         sp = SiDIFParser(debug=self.debug)
         parsed, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
-        self.debug=True
+        #self.debug=True
         if self.debug:
             sp.printResult(parsed)
         dif=parsed[0]
@@ -179,7 +179,11 @@ class TestSiDIFParser(unittest.TestCase):
         dif=self.getPresentation()
         uml=PlantUml(title="Presentation",copyRight="© BITPlan GmbH 2015-2020")
         uml.fromDIF(dif)
-        print (uml)
+        if self.debug:
+            print (uml)
+        self.assertTrue("package Presentation {" in uml.uml)
+        self.assertTrue("class Icon {" in uml.uml)
+        self.assertTrue("author:Text" in uml.uml)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testSiDIFParser']
