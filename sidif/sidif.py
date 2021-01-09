@@ -121,26 +121,37 @@ class DataInterchange():
         following the "it" semantics
         
         e.g.
-            JohnDoe isA Person
-            "John" is firstName of it
-            "Doe"  is lastName of it
-            35 is age of it
+        
+        .. code-block:: python
+        
+               JohnDoe isA Person
+               "John" is firstName of it
+               "Doe"  is lastName of it
+               35 is age of it
             
         will have a pseudo - triple representation of
+        
+        .. code-block:: python
+        
             JohnDoe isA Person
             John firstName it
             Doe lastName it
             35 age it
             
-        leading to a dict {
-          'JohnDoe': { 
-              'isA': Person, 
-              'firstName': John, 
-              'lastName': 'Doe'
-              'age': 35
-        }
+        leading to a dict 
         
-        Return:
+        .. code-block:: python
+        
+            {
+               'JohnDoe': { 
+                  'isA': Person, 
+                  'firstName': John, 
+                   'lastName': 'Doe'
+                  'age': 35
+                }
+            }    
+        
+        Returns:
             dict: the dict of dicts representation of the triples found
         '''
         # the dict of dicts

@@ -233,27 +233,31 @@
 <code class="sig-name descname">toDictOfDicts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.toDictOfDicts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.toDictOfDicts" title="Permalink to this definition">¶</a></dt>
 <dd><p>convert me to a dict of dicts
 following the “it” semantics</p>
-<dl class="simple">
-<dt>e.g.</dt><dd><p>JohnDoe isA Person
-“John” is firstName of it
-“Doe”  is lastName of it
-35 is age of it</p>
-</dd>
-<dt>will have a pseudo - triple representation of</dt><dd><p>JohnDoe isA Person
-John firstName it
-Doe lastName it
-35 age it</p>
-</dd>
-<dt>leading to a dict {</dt><dd><dl class="simple">
-<dt>‘JohnDoe’: {</dt><dd><p>‘isA’: Person,
-‘firstName’: John,
-‘lastName’: ‘Doe’
-‘age’: 35</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>}</p>
+<p>e.g.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">JohnDoe</span> <span class="n">isA</span> <span class="n">Person</span>
+<span class="s2">&quot;John&quot;</span> <span class="ow">is</span> <span class="n">firstName</span> <span class="n">of</span> <span class="n">it</span>
+<span class="s2">&quot;Doe&quot;</span>  <span class="ow">is</span> <span class="n">lastName</span> <span class="n">of</span> <span class="n">it</span>
+<span class="mi">35</span> <span class="ow">is</span> <span class="n">age</span> <span class="n">of</span> <span class="n">it</span>
+</pre></div>
+</div>
+<p>will have a pseudo - triple representation of</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">JohnDoe</span> <span class="n">isA</span> <span class="n">Person</span>
+<span class="n">John</span> <span class="n">firstName</span> <span class="n">it</span>
+<span class="n">Doe</span> <span class="n">lastName</span> <span class="n">it</span>
+<span class="mi">35</span> <span class="n">age</span> <span class="n">it</span>
+</pre></div>
+</div>
+<p>leading to a dict</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s1">&#39;JohnDoe&#39;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s1">&#39;isA&#39;</span><span class="p">:</span> <span class="n">Person</span><span class="p">,</span>
+      <span class="s1">&#39;firstName&#39;</span><span class="p">:</span> <span class="n">John</span><span class="p">,</span>
+       <span class="s1">&#39;lastName&#39;</span><span class="p">:</span> <span class="s1">&#39;Doe&#39;</span>
+      <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">35</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the dict of dicts representation of the triples found</p>
