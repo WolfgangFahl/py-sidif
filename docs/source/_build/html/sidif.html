@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="tests package" href="tests.html" />
-    <link rel="prev" title="Welcome to py-sidif’s documentation!" href="index.html" /> 
+    <link rel="prev" title="setup module" href="setup.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -84,9 +84,11 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">sidif package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-sidif.sidif">sidif.sidif module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-sidif.uml">sidif.uml module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-sidif">Module contents</a></li>
 </ul>
 </li>
@@ -166,20 +168,208 @@
 <p>Created on 06.11.2020</p>
 <p>&#64;author: wf</p>
 <dl class="py class">
+<dt id="sidif.sidif.Comment">
+<em class="property">class </em><code class="sig-prename descclassname">sidif.sidif.</code><code class="sig-name descname">Comment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">comment</span></em>, <em class="sig-param"><span class="n">location</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#Comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.Comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>a comment with it’s location</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="sidif.sidif.DataInterchange">
+<em class="property">class </em><code class="sig-prename descclassname">sidif.sidif.</code><code class="sig-name descname">DataInterchange</code><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>a data interchange</p>
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.addComment">
+<code class="sig-name descname">addComment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">comment</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.addComment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.addComment" title="Permalink to this definition">¶</a></dt>
+<dd><p>add the given comment</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.addLink">
+<code class="sig-name descname">addLink</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">sourceRole</span></em>, <em class="sig-param"><span class="n">targetRole</span></em>, <em class="sig-param"><span class="n">sourceMultiple</span></em>, <em class="sig-param"><span class="n">targetMultiple</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.addLink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.addLink" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.addSchemaFromDict">
+<code class="sig-name descname">addSchemaFromDict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pDict</span></em>, <em class="sig-param"><span class="n">context</span></em>, <em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">parentName</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.addSchemaFromDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.addSchemaFromDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>add schema information from the given dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.addTopic">
+<code class="sig-name descname">addTopic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.addTopic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.addTopic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.addTriple">
+<code class="sig-name descname">addTriple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">triple</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.addTriple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.addTriple" title="Permalink to this definition">¶</a></dt>
+<dd><p>add the given triple</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>triple</strong> (<a class="reference internal" href="#sidif.sidif.Triple" title="sidif.sidif.Triple"><em>Triple</em></a>) – the triple to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.asSiDIF">
+<code class="sig-name descname">asSiDIF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.asSiDIF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.asSiDIF" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert me to SiDIF notation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.fixId">
+<code class="sig-name descname">fixId</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.fixId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.fixId" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.ofDict">
+<em class="property">static </em><code class="sig-name descname">ofDict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pDict</span></em>, <em class="sig-param"><span class="n">context</span><span class="o">=</span><span class="default_value">'context'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.ofDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.ofDict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.DataInterchange.toDictOfDicts">
+<code class="sig-name descname">toDictOfDicts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#DataInterchange.toDictOfDicts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.DataInterchange.toDictOfDicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert me to a dict of dicts
+following the “it” semantics</p>
+<dl class="simple">
+<dt>e.g.</dt><dd><p>JohnDoe isA Person
+“John” is firstName of it
+“Doe”  is lastName of it
+35 is age of it</p>
+</dd>
+<dt>will have a pseudo - triple representation of</dt><dd><p>JohnDoe isA Person
+John firstName it
+Doe lastName it
+35 age it</p>
+</dd>
+<dt>leading to a dict {</dt><dd><dl class="simple">
+<dt>‘JohnDoe’: {</dt><dd><p>‘isA’: Person,
+‘firstName’: John,
+‘lastName’: ‘Doe’
+‘age’: 35</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the dict of dicts representation of the triples found</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="sidif.sidif.SiDIFParser">
 <em class="property">class </em><code class="sig-prename descclassname">sidif.sidif.</code><code class="sig-name descname">SiDIFParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">showErrors</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Parser for SiDIF Simple Data Interchange Format
 see <a class="reference external" href="http://wiki.bitplan.com/index.php/SiDIF">http://wiki.bitplan.com/index.php/SiDIF</a></p>
 <dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.addContent">
+<code class="sig-name descname">addContent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">di</span></em>, <em class="sig-param"><span class="n">token</span></em>, <em class="sig-param"><span class="n">tokenName</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.addContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.addContent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.convertToBoolean">
+<code class="sig-name descname">convertToBoolean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenStr</span></em>, <em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.convertToBoolean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.convertToBoolean" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the token to a boolean</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.convertToTime">
+<code class="sig-name descname">convertToTime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenStr</span></em>, <em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.convertToTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.convertToTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert a timeLiteral to a time</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.convertToTriple">
+<code class="sig-name descname">convertToTriple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenStr</span></em>, <em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">group</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.convertToTriple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.convertToTriple" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the given token to a triple</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tokenStr</strong> (<em>str</em>) – the token string</p></li>
+<li><p><strong>location</strong> (<em>object</em>) – location of the parse process</p></li>
+<li><p><strong>group</strong> (<em>ParseResults</em>) – the expected triple defining group</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="sidif.sidif.SiDIFParser.getGrammar">
 <code class="sig-name descname">getGrammar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.getGrammar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.getGrammar" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.getIdentifier">
+<code class="sig-name descname">getIdentifier</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.getIdentifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.getIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.getLiteral">
+<code class="sig-name descname">getLiteral</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.getLiteral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.getLiteral" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the literal sub Grammar</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="sidif.sidif.SiDIFParser.getUriRegexp">
 <em class="property">static </em><code class="sig-name descname">getUriRegexp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.getUriRegexp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.getUriRegexp" title="Permalink to this definition">¶</a></dt>
 <dd><p>get a regular expression for an URI</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.getValueGrammar">
+<code class="sig-name descname">getValueGrammar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.getValueGrammar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.getValueGrammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>sub grammar for value definition</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.handleComment">
+<code class="sig-name descname">handleComment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.handleComment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.handleComment" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle the comment given comment tokens</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.handleDateTimeLiteral">
+<code class="sig-name descname">handleDateTimeLiteral</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenStr</span></em>, <em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">group</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.handleDateTimeLiteral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.handleDateTimeLiteral" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle a date time literal</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.handleGroup">
+<code class="sig-name descname">handleGroup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_tokenStr</span></em>, <em class="sig-param"><span class="n">_location</span></em>, <em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.handleGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.handleGroup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.handleIdentifier">
+<code class="sig-name descname">handleIdentifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_tokenStr</span></em>, <em class="sig-param"><span class="n">_location</span></em>, <em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.handleIdentifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.handleIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle identifiers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.handleLines">
+<code class="sig-name descname">handleLines</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_tokenStr</span></em>, <em class="sig-param"><span class="n">_location</span></em>, <em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.handleLines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.handleLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle the line derived</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.handleStringLiteral">
+<code class="sig-name descname">handleStringLiteral</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_tokenStr</span></em>, <em class="sig-param"><span class="n">_location</span></em>, <em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.handleStringLiteral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.handleStringLiteral" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle string literals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tokens</strong> (<em>ParseResults</em>) – the tokens for the literal</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -213,6 +403,96 @@ see <a class="reference external" href="http://wiki.bitplan.com/index.php/SiDIF"
 <dl class="py method">
 <dt id="sidif.sidif.SiDIFParser.parseWithGrammar">
 <code class="sig-name descname">parseWithGrammar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">grammar</span></em>, <em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.parseWithGrammar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.parseWithGrammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse the given text with the given grammar optionally
+labeling the parse with the given title</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grammar</strong> (<em>object</em>) – a pyparsing grammar</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – the text to be parsed</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – optional title</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.printResult">
+<code class="sig-name descname">printResult</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pr</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.printResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.printResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>print the given parseResult recursively</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pr</strong> (<em>object</em>) – the ParseResult to print</p></li>
+<li><p><strong>indent</strong> (<em>str</em>) – initial indentation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.SiDIFParser.warn">
+<code class="sig-name descname">warn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#SiDIFParser.warn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.SiDIFParser.warn" title="Permalink to this definition">¶</a></dt>
+<dd><p>show a warning with the given message</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – the warning message</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sidif.sidif.Triple">
+<em class="property">class </em><code class="sig-prename descclassname">sidif.sidif.</code><code class="sig-name descname">Triple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pSubject</span></em>, <em class="sig-param"><span class="n">pPredicate</span></em>, <em class="sig-param"><span class="n">pObject</span></em>, <em class="sig-param"><span class="n">location</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#Triple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.Triple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>a pseudo - triple (subject,predicate,object)
+with it’s location</p>
+<p>due to the “it” syntax the subject may contain the object and the real
+subject is the latest non it-reference</p>
+<dl class="py method">
+<dt id="sidif.sidif.Triple.asLiteral">
+<code class="sig-name descname">asLiteral</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#Triple.asLiteral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.Triple.asLiteral" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.Triple.asSiDIF">
+<code class="sig-name descname">asSiDIF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#Triple.asSiDIF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.Triple.asSiDIF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sidif.sidif.Triple.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/sidif.html#Triple.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.sidif.Triple.dump" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sidif.uml">
+<span id="sidif-uml-module"></span><h2>sidif.uml module<a class="headerlink" href="#module-sidif.uml" title="Permalink to this headline">¶</a></h2>
+<p>Created on 2020-11-12</p>
+<p>&#64;author: wf</p>
+<dl class="py class">
+<dt id="sidif.uml.PlantUml">
+<em class="property">class </em><code class="sig-prename descclassname">sidif.uml.</code><code class="sig-name descname">PlantUml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">copyRight</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">withSkin</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/uml.html#PlantUml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.uml.PlantUml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>classdocs</p>
+<dl class="py method">
+<dt id="sidif.uml.PlantUml.asUmlDict">
+<code class="sig-name descname">asUmlDict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dif</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/uml.html#PlantUml.asUmlDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.uml.PlantUml.asUmlDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the given DataInterchange as a UML Dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sidif.uml.PlantUml.fromDIF">
+<code class="sig-name descname">fromDIF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dif</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sidif/uml.html#PlantUml.fromDIF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sidif.uml.PlantUml.fromDIF" title="Permalink to this definition">¶</a></dt>
+<dd><p>create uml from a Data Interchange</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="sidif.uml.PlantUml.skinparams">
+<code class="sig-name descname">skinparams</code><em class="property"> = &quot;\n' BITPlan Corporate identity skin params\n' Copyright (c) 2015-2020 BITPlan GmbH\n' see http://wiki.bitplan.com/PlantUmlSkinParams#BITPlanCI\n' skinparams generated by com.bitplan.restmodelmanager\nskinparam note {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam component {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam package {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam usecase {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam activity {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam classAttribute {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam interface {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam class {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nskinparam object {\n  BackGroundColor #FFFFFF\n  FontSize 12\n  ArrowColor #FF8000\n  BorderColor #FF8000\n  FontColor black\n  FontName Technical\n}\nhide Circle\n' end of skinparams '\n&quot;</em><a class="headerlink" href="#sidif.uml.PlantUml.skinparams" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -234,7 +514,7 @@ see <a class="reference external" href="http://wiki.bitplan.com/index.php/SiDIF"
         <a href="tests.html" class="btn btn-neutral float-right" title="tests package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to py-sidif’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="setup.html" class="btn btn-neutral float-left" title="setup module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

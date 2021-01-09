@@ -82,6 +82,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../sidif.html">sidif package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tests.html">tests package</a></li>
 </ul>
@@ -149,13 +150,15 @@
             
   <h1>Source code for tests.test_sidif</h1><div class="highlight"><pre>
 <span></span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on 06.11.2020</span>
+<span class="sd">Created on 2020-11-06</span>
 
 <span class="sd">@author: wf</span>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">import</span> <span class="nn">unittest</span>
-<span class="kn">from</span> <span class="nn">sidif.sidif</span> <span class="kn">import</span> <span class="n">SiDIFParser</span>
-<span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Group</span><span class="p">,</span><span class="n">Literal</span><span class="p">,</span><span class="n">Optional</span><span class="p">,</span><span class="n">Regex</span><span class="p">,</span><span class="n">ZeroOrMore</span>
+<span class="kn">from</span> <span class="nn">sidif.sidif</span> <span class="kn">import</span> <span class="n">SiDIFParser</span><span class="p">,</span> <span class="n">DataInterchange</span>
+<span class="kn">from</span> <span class="nn">sidif.uml</span> <span class="kn">import</span> <span class="n">PlantUml</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">xmltodict</span>
 
 <div class="viewcode-block" id="TestSiDIFParser"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser">[docs]</a><span class="k">class</span> <span class="nc">TestSiDIFParser</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -163,72 +166,202 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     
 <div class="viewcode-block" id="TestSiDIFParser.setUp"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseUrl</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/BITPlan/org.sidif.triplestore/master/src/test/resources/sidif&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="TestSiDIFParser.tearDown"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.tearDown">[docs]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="TestSiDIFParser.getExampleUris"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.getExampleUris">[docs]</a>    <span class="k">def</span> <span class="nf">getExampleUris</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">exampleUris</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;http://foo.com/blah_blah&quot;</span><span class="p">,</span>
+        <span class="n">exampleUris</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;http://foo.com/blah_blah&quot;</span><span class="p">,</span>
              <span class="s2">&quot;http://foo.com/blah_blah/&quot;</span><span class="p">,</span>
              <span class="s2">&quot;http://foo.com/blah_blah_(wikipedia)&quot;</span><span class="p">,</span>
              <span class="s2">&quot;http://foo.com/blah_blah_(wikipedia)_(again)&quot;</span><span class="p">,</span>
              <span class="s2">&quot;http://www.example.com/wpstyle/?p=364&quot;</span><span class="p">,</span>
              <span class="s2">&quot;http://www.schema.org/DataType&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;https://www.example.com/foo/?bar=baz&amp;inga=42&amp;quux&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://✪df.ws/123&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid:password@example.com:8080&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid:password@example.com:8080/&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid@example.com&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid@example.com/&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid@example.com:8080&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid@example.com:8080/&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid:password@example.com&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://userid:password@example.com/&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://142.42.1.1/&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;http://142.42.1.1:8080/&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;mailto:bob@oldcorp.example.org&quot;</span>
             <span class="p">]</span>
         <span class="k">return</span> <span class="n">exampleUris</span><span class="p">;</span></div>
     
-<div class="viewcode-block" id="TestSiDIFParser.testUrlGrammar"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testUrlGrammar">[docs]</a>    <span class="k">def</span> <span class="nf">testUrlGrammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">sp</span><span class="o">=</span><span class="n">SiDIFParser</span><span class="p">()</span>
-        <span class="n">identifier</span><span class="o">=</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[A-Za-z_][A-Za-z_0-9]*&quot;</span><span class="p">)</span>
-        <span class="n">uri</span><span class="o">=</span><span class="n">Group</span><span class="p">(</span><span class="n">identifier</span><span class="o">+</span><span class="n">Literal</span><span class="p">(</span><span class="s2">&quot;://&quot;</span><span class="p">)</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[()/.?=]&quot;</span><span class="p">)</span><span class="o">+</span><span class="n">Optional</span><span class="p">(</span><span class="n">identifier</span><span class="o">|</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9]+&quot;</span><span class="p">))))(</span><span class="s2">&quot;uri&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getExampleUris</span><span class="p">()):</span>
-            <span class="n">sp</span><span class="o">.</span><span class="n">parseWithGrammar</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span></div>
-        
 <div class="viewcode-block" id="TestSiDIFParser.testURLRegex"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testURLRegex">[docs]</a>    <span class="k">def</span> <span class="nf">testURLRegex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        test URI Regexp - see https://mathiasbynens.be/demo/url-regex</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">uriRegexp</span><span class="o">=</span><span class="n">SiDIFParser</span><span class="o">.</span><span class="n">getUriRegexp</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getExampleUris</span><span class="p">()):</span>
-            <span class="n">match</span><span class="o">=</span><span class="n">uriRegexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">uriRegexp</span> <span class="o">=</span> <span class="n">SiDIFParser</span><span class="o">.</span><span class="n">getUriRegexp</span><span class="p">()</span>
+        <span class="c1"># self.debug=True</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getExampleUris</span><span class="p">()):</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">uriRegexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">: </span><span class="si">%s</span><span class="s2">-&gt;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="s2">&quot;✅&quot;</span> <span class="k">if</span> <span class="n">match</span> <span class="k">else</span> <span class="s2">&quot;❌&quot;</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">: </span><span class="si">%s</span><span class="s2">-&gt;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;✅&quot;</span> <span class="k">if</span> <span class="n">match</span> <span class="k">else</span> <span class="s2">&quot;❌&quot;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">match</span><span class="p">)</span></div>
             
-<div class="viewcode-block" id="TestSiDIFParser.testSiDIFParser"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testSiDIFParser">[docs]</a>    <span class="k">def</span> <span class="nf">testSiDIFParser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSiDIFParser.testGrammars"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testGrammars">[docs]</a>    <span class="k">def</span> <span class="nf">testGrammars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        test the SiDIF parser</span>
+<span class="sd">        test the grammars</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">sp</span><span class="o">=</span><span class="n">SiDIFParser</span><span class="p">()</span>
-        <span class="n">sidifs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SiDIF isA DataInterchangeFormat</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;Paris capital France&quot;</span><span class="p">,</span><span class="s2">&quot;Paris is capital of France</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;France has capital Paris</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">sidif</span> <span class="ow">in</span> <span class="n">sidifs</span><span class="p">:</span>
-            <span class="n">result</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">sp</span><span class="o">.</span><span class="n">parseText</span><span class="p">(</span><span class="n">sidif</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="ow">and</span> <span class="n">result</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">dump</span><span class="p">())</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="k">pass</span></div>
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">SiDIFParser</span><span class="p">()</span>
+        <span class="n">examples</span> <span class="o">=</span> <span class="p">[{</span>
+            <span class="s2">&quot;grammar&quot;</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">getLiteral</span><span class="p">(),</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Literals&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sidifs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;2020-12-08&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1970-01-01 18:35:23&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;0xff&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;3.1415926&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;6.02e23&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;15:46&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;http://example.org/pic.jpg&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},{</span>
+            <span class="s2">&quot;grammar&quot;</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">getValueGrammar</span><span class="p">(),</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Value&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sidifs&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;1 is ordinal of it&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;false is started of it&#39;</span><span class="p">,</span>
+                <span class="s2">&quot;2020-10-15 is startDate of it&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;2006-05-17 09:00:15 is timeStamp of it&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;0xc0 is hexValue of it&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;3015.76 is floatValue of it&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;07:59:46 is time of it&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;http://example.org/pic.jpg is depiction of it&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;&quot;&quot; is subtitle of it&#39;</span>
+            <span class="p">]</span>
+        <span class="p">},{</span>
+            <span class="s2">&quot;grammar&quot;</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">getGrammar</span><span class="p">(),</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;SiDIF&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sidifs&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;SiDIF isA DataInterchangeFormat</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Paris capital France&quot;</span><span class="p">,</span> <span class="s2">&quot;Paris is capital of France</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;France has capital Paris</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+             <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="c1">#self.debug=True</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">example</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">examples</span><span class="p">):</span>
+            <span class="n">grammar</span> <span class="o">=</span> <span class="n">example</span><span class="p">[</span><span class="s1">&#39;grammar&#39;</span><span class="p">]</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">example</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">sidif</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">example</span><span class="p">[</span><span class="s1">&#39;sidifs&#39;</span><span class="p">]):</span>
+                <span class="n">result</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">parseWithGrammar</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">sidif</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="ow">and</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">printResult</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+                
+<div class="viewcode-block" id="TestSiDIFParser.getPresentation"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.getPresentation">[docs]</a>    <span class="k">def</span> <span class="nf">getPresentation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/presentation.sidif&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseUrl</span><span class="p">)</span>
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">SiDIFParser</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">)</span>
+        <span class="n">parsed</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">parseUrl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Presentation&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1">#self.debug=True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="n">sp</span><span class="o">.</span><span class="n">printResult</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+        <span class="n">dif</span><span class="o">=</span><span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dif</span></div>
+            
+<div class="viewcode-block" id="TestSiDIFParser.testIsA"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testIsA">[docs]</a>    <span class="k">def</span> <span class="nf">testIsA</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        test the isA parsing</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">dif</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getPresentation</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dif</span><span class="p">,</span> <span class="n">DataInterchange</span><span class="p">))</span>
+        <span class="n">dod</span><span class="o">=</span><span class="n">dif</span><span class="o">.</span><span class="n">toDictOfDicts</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">dod</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">dod</span><span class="p">))</span>          </div>
     
 <div class="viewcode-block" id="TestSiDIFParser.testExamples"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testExamples">[docs]</a>    <span class="k">def</span> <span class="nf">testExamples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        test Examples from org.sidif.triplestore</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">sp</span><span class="o">=</span><span class="n">SiDIFParser</span><span class="p">()</span>
-        <span class="n">baseUrl</span><span class="o">=</span><span class="s2">&quot;https://raw.githubusercontent.com/BITPlan/org.sidif.triplestore/master/src/test/resources/sidif&quot;</span>
-        <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="p">[</span>
-            <span class="s2">&quot;example1.sidif&quot;</span><span class="p">,</span><span class="s2">&quot;example2.sidif&quot;</span><span class="p">,</span><span class="s2">&quot;familyTree.sidif&quot;</span><span class="p">,</span><span class="s2">&quot;graph1.sidif&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;turtle_spiderman.sidif&quot;</span><span class="p">,</span><span class="s2">&quot;typetest_url.sidif&quot;</span><span class="p">,</span><span class="s2">&quot;utf8.sidif&quot;</span><span class="p">,</span><span class="s2">&quot;vcard.sidif&quot;</span>
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">SiDIFParser</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">example</span><span class="p">,</span><span class="n">exTriples</span><span class="p">,</span><span class="n">exComments</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;example1.sidif&quot;</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s2">&quot;example2.sidif&quot;</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s2">&quot;familyTree.sidif&quot;</span><span class="p">,</span><span class="mi">51</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s2">&quot;graph1.sidif&quot;</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;json_ld_manu_sporny.sidif&quot;</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;notation3_TonyBenn.sidif&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;presentation.sidif&quot;</span><span class="p">,</span><span class="mi">546</span><span class="p">,</span><span class="mi">67</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;rdf_cd.sidif&quot;</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;rdf_json_anna_wilder.sidif&quot;</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">22</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;roles.sidif&quot;</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;royal92-14.sidif&quot;</span><span class="p">,</span><span class="mi">210</span><span class="p">,</span><span class="mi">19</span><span class="p">),</span>
+            <span class="c1"># 62770 triples ...</span>
+            <span class="c1"># &quot;royal92.sidif&quot;,</span>
+            <span class="p">(</span><span class="s2">&quot;trig_bob_alice.sidif&quot;</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">24</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;triple1.sidif&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;turtle_spiderman.sidif&quot;</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s2">&quot;typetest.sidif&quot;</span><span class="p">,</span><span class="mi">62</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;utf8.sidif&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;vcard.sidif&quot;</span><span class="p">,</span><span class="mi">31</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
         <span class="p">]:</span>
-            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">baseUrl</span><span class="p">,</span><span class="n">example</span><span class="p">)</span>
-            <span class="n">result</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">sp</span><span class="o">.</span><span class="n">parseUrl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="n">example</span><span class="p">)</span>
-            <span class="c1">#self.assertTrue(error is None)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="ow">and</span> <span class="n">result</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">dump</span><span class="p">())</span></div></div>
-                <span class="c1">#pprint.pprint(result.asList())</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseUrl</span><span class="p">,</span> <span class="n">example</span><span class="p">)</span>
+            <span class="n">result</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">parseUrl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">example</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s1">&#39;links&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">)</span>
+            <span class="n">di</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;links&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">foundTriples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">di</span><span class="o">.</span><span class="n">triples</span><span class="p">)</span>
+            <span class="n">foundComments</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">di</span><span class="o">.</span><span class="n">comments</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">foundTriples</span><span class="o">!=</span><span class="n">exTriples</span> <span class="ow">or</span> <span class="n">foundComments</span><span class="o">!=</span><span class="n">exComments</span><span class="p">:</span>
+                <span class="n">sp</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: expected </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2"> triples/comments but found </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">example</span><span class="p">,</span><span class="n">exTriples</span><span class="p">,</span><span class="n">exComments</span><span class="p">,</span><span class="n">foundTriples</span><span class="p">,</span><span class="n">foundComments</span><span class="p">))</span>
+                <span class="n">sp</span><span class="o">.</span><span class="n">printResult</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">exTriples</span><span class="p">,</span><span class="n">foundTriples</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">exComments</span><span class="p">,</span><span class="n">foundComments</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="TestSiDIFParser.testIssue4"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testIssue4">[docs]</a>    <span class="k">def</span> <span class="nf">testIssue4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        https://github.com/WolfgangFahl/py-sidif/issues/4</span>
+<span class="sd">        convert dict tree to sidif</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;https://raw.githubusercontent.com/semstats/semstats.github.io/master/2019/ceur/workshop.xml&quot;</span>
+        <span class="n">xml</span><span class="o">=</span><span class="n">urlopen</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">wsdict</span><span class="o">=</span><span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">wsdict</span><span class="p">)</span>
+        <span class="n">dif</span><span class="o">=</span><span class="n">DataInterchange</span><span class="o">.</span><span class="n">ofDict</span><span class="p">(</span><span class="n">wsdict</span><span class="p">,</span><span class="n">context</span><span class="o">=</span><span class="s2">&quot;ceurws&quot;</span><span class="p">)</span>
+        <span class="n">sidifStr</span><span class="o">=</span><span class="n">dif</span><span class="o">.</span><span class="n">asSiDIF</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sidifStr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;workshop isA Topic&quot;</span> <span class="ow">in</span> <span class="n">sidifStr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;homepage isA Property&quot;</span> <span class="ow">in</span> <span class="n">sidifStr</span><span class="p">)</span>
+        <span class="n">uml</span><span class="o">=</span><span class="n">PlantUml</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;CEUR-WS&quot;</span><span class="p">,</span><span class="n">copyRight</span><span class="o">=</span><span class="s2">&quot;© Christoph Lange and contributors 2012–2020&quot;</span><span class="p">)</span>
+        <span class="n">uml</span><span class="o">.</span><span class="n">fromDIF</span><span class="p">(</span><span class="n">dif</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">uml</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;workshop &quot; 1&quot; -- &quot;editors *&quot; editor&#39;&#39;&#39;</span> <span class="ow">in</span> <span class="n">uml</span><span class="o">.</span><span class="n">uml</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="TestSiDIFParser.testIssue5"><a class="viewcode-back" href="../../tests.html#tests.test_sidif.TestSiDIFParser.testIssue5">[docs]</a>    <span class="k">def</span> <span class="nf">testIssue5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        https://github.com/WolfgangFahl/py-sidif/issues/5</span>
+<span class="sd">        convert sidif to plantuml #5</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">dif</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getPresentation</span><span class="p">()</span>
+        <span class="n">uml</span><span class="o">=</span><span class="n">PlantUml</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Presentation&quot;</span><span class="p">,</span><span class="n">copyRight</span><span class="o">=</span><span class="s2">&quot;© BITPlan GmbH 2015-2020&quot;</span><span class="p">)</span>
+        <span class="n">uml</span><span class="o">.</span><span class="n">fromDIF</span><span class="p">(</span><span class="n">dif</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="n">uml</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;package Presentation {&quot;</span> <span class="ow">in</span> <span class="n">uml</span><span class="o">.</span><span class="n">uml</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;class Icon {&quot;</span> <span class="ow">in</span> <span class="n">uml</span><span class="o">.</span><span class="n">uml</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;author:Text&quot;</span> <span class="ow">in</span> <span class="n">uml</span><span class="o">.</span><span class="n">uml</span><span class="p">)</span></div></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1">#import sys;sys.argv = [&#39;&#39;, &#39;Test.testSiDIFParser&#39;]</span>
+    <span class="c1"># import sys;sys.argv = [&#39;&#39;, &#39;Test.testSiDIFParser&#39;]</span>
     <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
 </pre></div>
 

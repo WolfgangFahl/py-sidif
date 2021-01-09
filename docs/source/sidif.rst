@@ -12,6 +12,14 @@ sidif.sidif module
    :undoc-members:
    :show-inheritance:
 
+sidif.uml module
+----------------
+
+.. automodule:: sidif.uml
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

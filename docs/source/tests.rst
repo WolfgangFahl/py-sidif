@@ -4,6 +4,14 @@ tests package
 Submodules
 ----------
 
+tests.test\_pyparsing module
+----------------------------
+
+.. automodule:: tests.test_pyparsing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 tests.test\_sidif module
 ------------------------
 
