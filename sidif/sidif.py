@@ -112,7 +112,8 @@ class DataInterchange():
         '''
         sidifStr=""
         for triple in self.triples:
-            sidifStr+="%s\n" % (triple.asSiDIF())
+            sidif=triple.asSiDIF()
+            sidifStr+=f"{sidif}\n"
         return sidifStr
     
     def toDictOfDicts(self):
@@ -301,7 +302,7 @@ class SiDIFParser(object):
         r"(?::\d{2,5})?"
         # resource path (optional)
         r"(?:[/?#]\S*)?")
-        compiled=re.compile(uriRegexp,re.RegexFlag.I |re.RegexFlag.UNICODE)
+        compiled=re.compile(uriRegexp,re.IGNORECASE |re.UNICODE)
         return compiled
     
     def convertToTime(self,tokenStr,location,token):
@@ -317,9 +318,9 @@ class SiDIFParser(object):
         except ValueError as ve:
             raise ParseFatalException(tokenStr, location, str(ve))
         
-    def convertToBoolean(self,tokenStr,location,token):
+    def convertToBoolean(self,tokenStr:str,location,token):
         '''
-        convert the token to a boolean
+        convert the given token to a boolean
         '''
         try:
             tokenStr=token[0]
@@ -332,7 +333,7 @@ class SiDIFParser(object):
         # https://stackoverflow.com/questions/13393432/raise-a-custom-exception-in-pyparsing
         raise ParseFatalException(tokenStr, location, "invalid boolean %s:%s" % (tokenStr,msg))
     
-    def handleDateTimeLiteral(self,tokenStr,location,group):
+    def handleDateTimeLiteral(self,tokenStr:str,location,group):
         '''
         handle a date time literal
         '''
@@ -382,9 +383,9 @@ class SiDIFParser(object):
         return comment
         
     def handleGroup(self,_tokenStr,_location,tokens):
-        tokenName=tokens.getName()
+        _tokenName=tokens.getName()
         token=tokens[0]
-        innerName=token.getName()
+        _innerName=token.getName()
         inner=token[0]
         return inner
     

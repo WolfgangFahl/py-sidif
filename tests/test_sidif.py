@@ -16,6 +16,7 @@ class TestSiDIFParser(unittest.TestCase):
     
     def setUp(self):
         self.debug = False
+        # from the original java code repository
         self.baseUrl = "https://raw.githubusercontent.com/BITPlan/org.sidif.triplestore/master/src/test/resources/sidif"
         pass
 
@@ -112,7 +113,10 @@ class TestSiDIFParser(unittest.TestCase):
                 self.assertIsNone(error)
                 
     def getPresentation(self):
-        url = "%s/presentation.sidif" % (self.baseUrl)
+        '''
+        get the SiDIF parse result for the presentation example
+        '''
+        url = f"{self.baseUrl}/presentation.sidif" 
         sp = SiDIFParser(debug=self.debug)
         parsed, error = sp.parseUrl(url, title="Presentation")
         self.assertTrue(error is None)
@@ -201,9 +205,11 @@ class TestSiDIFParser(unittest.TestCase):
         convert sidif to plantuml #5
         '''
         dif=self.getPresentation()
-        uml=PlantUml(title="Presentation",copyRight="© BITPlan GmbH 2015-2020")
+        debug=self.debug
+        debug=True
+        uml=PlantUml(title="Presentation",copyRight="© BITPlan GmbH 2015-2022")
         uml.fromDIF(dif)
-        if self.debug:
+        if debug:
             print (uml)
         self.assertTrue("package Presentation {" in uml.uml)
         self.assertTrue("class Icon {" in uml.uml)
