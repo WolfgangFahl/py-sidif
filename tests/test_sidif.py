@@ -155,10 +155,10 @@ class TestSiDIFParser(Basetest):
             # "royal92.sidif",
             ("trig_bob_alice.sidif",11,24),
             ("triple1.sidif", 6,0),
-            ("turtle_spiderman.sidif",8,7), 
+            ("turtle_spiderman.sidif",8,6), 
             ("typetest.sidif",62,4) ,
             ("utf8.sidif", 3,1),
-            ("vcard.sidif",31,3),
+            ("vcard.sidif",31,2),
         ]:
             url = "%s/%s" % (self.baseUrl, example)
             result, error = sp.parseUrl(url, title=example)
@@ -171,8 +171,8 @@ class TestSiDIFParser(Basetest):
                 sp.warn("%s: expected %d/%d triples/comments but found %d/%d" %(example,exTriples,exComments,foundTriples,foundComments))
                 sp.printResult(result)
                 
-            self.assertEqual(exTriples,foundTriples)
-            self.assertEqual(exComments,foundComments)
+            self.assertEqual(exTriples,foundTriples,example)
+            self.assertEqual(exComments,foundComments,example)
             
     def testIssue4(self):
         '''
