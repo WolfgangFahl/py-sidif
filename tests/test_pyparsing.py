@@ -4,10 +4,9 @@ Created on 2020-11-08
 @author: wf
 '''
 import unittest
-import datetime
 from sidif.sidif import SiDIFParser
-from pyparsing import oneOf, CharsNotIn,Group,LineEnd,Regex,Optional,ParseException,ParseFatalException, Word,ZeroOrMore
-from pyparsing import hexnums,pyparsing_common,tokenMap,Suppress
+from pyparsing import oneOf, ParseException
+from pyparsing import pyparsing_common,Suppress
 
 class TestPyParsing(unittest.TestCase):
     '''

@@ -3,24 +3,21 @@ Created on 2020-11-06
 
 @author: wf
 '''
+from tests.basetest import Basetest
 import unittest
 from sidif.sidif import SiDIFParser, DataInterchange
 from sidif.uml import PlantUml
 from urllib.request import urlopen
 import xmltodict
 
-class TestSiDIFParser(unittest.TestCase):
+class TestSiDIFParser(Basetest):
     '''
     test the parser for the Simple Data Interchange Format
     '''
-    
-    def setUp(self):
-        self.debug = False
+    def setUp(self, debug=False, profile=True):
+        Basetest.setUp(self, debug=debug, profile=profile)
         # from the original java code repository
         self.baseUrl = "https://raw.githubusercontent.com/BITPlan/org.sidif.triplestore/master/src/test/resources/sidif"
-        pass
-
-    def tearDown(self):
         pass
 
     def getExampleUris(self):
