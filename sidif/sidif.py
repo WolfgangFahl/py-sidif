@@ -1,5 +1,5 @@
 '''
-Created on 06.11.2020
+Created on 2020-11-06
 
 @author: wf
 '''
@@ -383,29 +383,42 @@ class SiDIFParser(object):
         return comment
         
     def handleGroup(self,_tokenStr,_location,tokens):
+        """
+        handle a Group
+        """
         _tokenName=tokens.getName()
         token=tokens[0]
         _innerName=token.getName()
         inner=token[0]
         return inner
     
-    def addContent(self,di,token,tokenName):
+    def addContent(self,di:DataInterchange,token,tokenName:str):
+        """
+        add Content to the given DataInterchange
+        
+        Args:
+            di(DataInterchange): the datainterchange
+            token: the  token to add the content for
+            tokenName(str): the name of the token
+        """
         if isinstance(token,ParseResults):
             if tokenName=="links" or tokenName=="comment" or tokenName=="line":
                 if self.debug:
-                    self.warn("%s: %d" % (tokenName,len(token)))
+                    self.warn(f"{tokenName}: {len(token)}")
                 tokenName=token.getName()
                 for subtoken in token:
                     self.addContent(di,subtoken,tokenName)
             else:
-                self.warn("parseResult %s not handled" % tokenName)
+                self.warn(f"parseResult {tokenName} not handled")
         elif isinstance(token,Triple):
             di.addTriple(token)
         elif isinstance(token,Comment):
             di.addComment(token)
         else:
             if self.debug:
-                self.warn("plain subtoken of %s type %s not handled" % (tokenName,type(token).__name__))
+                if not token.isspace():
+                    token_type=type(token).__name__
+                    self.warn(f"plain subtoken of {tokenName} type {token_type} not handled")
             pass
 
     def handleLines(self,_tokenStr,_location,tokens):
@@ -507,7 +520,7 @@ class SiDIFParser(object):
             ).setParseAction(self.convertToTriple)("hasLink")
             link=Group(islink|haslink|idlink).setParseAction(self.handleGroup)("link")
             comment=Group(
-                Suppress("#")+ZeroOrMore(Word(printables))+LineEnd()|LineEnd()
+                Suppress("#")+ZeroOrMore(Word(printables))+OneOrMore(LineEnd())|OneOrMore(LineEnd())
             ).setParseAction(self.handleComment)('comment*')
             line=Group(
                 value|link
