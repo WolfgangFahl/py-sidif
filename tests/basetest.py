@@ -7,7 +7,7 @@ Created on 2021-08-19
 import getpass
 from unittest import TestCase
 import os
-from skg.profiler import Profiler
+from sidif.profiler import Profiler
 
 class Basetest(TestCase):
     """

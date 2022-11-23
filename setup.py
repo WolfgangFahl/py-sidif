@@ -11,7 +11,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='py-sidif',
-    version='0.0.6',
+    version='0.0.7',
 
     packages=['sidif',],
     author='Wolfgang Fahl',
@@ -32,10 +32,12 @@ setup(
     ],
     classifiers=[
             'Programming Language :: Python',
-            'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
-            'Programming Language :: Python :: 3.9'
+            'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3.10',
+            'Programming Language :: Python :: 3.11'
+ 
     ],
     long_description=long_description,
     long_description_content_type='text/markdown'
