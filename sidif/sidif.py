@@ -561,12 +561,24 @@ class SiDIFParser(object):
             result=grammar.parseString(text,parseAll=True)
         except ParseException as pe:
             if self.showError:
-                print ("%s: error in line %d col %d: \n%s" % (title,pe.lineno,pe.col,pe.line),file=sys.stderr)
-            #if self.debug:
-                print (pe.explain(pe))
+                errMsg=SiDIFParser.errorMessage(title,pe)
+                print (errMsg,file=sys.stderr)
             error=pe
         return result,error
-            
+    
+    @classmethod
+    def errorMessage(cls,title:str,pe:ParseException)->str:
+        """
+        Args:
+            title(str): the title
+            pe(ParseException): the exception to get the error message for
+        Returns:
+            str: an error message with the explanation
+        """
+        msg="%s: error in line %d col %d: \n%s" % (title,pe.lineno,pe.col,pe.line)
+        msg+="\n"+pe.explain(depth=0)
+        return msg
+    
     def parseText(self,sidif,title=None):
         '''
         parse the given sidif text
