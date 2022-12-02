@@ -6,7 +6,9 @@ Created on 2020-11-06
 from pyparsing import CharsNotIn,Group,LineEnd,oneOf,OneOrMore,Optional
 from pyparsing import ParserElement,ParseException,ParseFatalException
 from pyparsing import ParseResults,Regex,Suppress,Word,ZeroOrMore
-from pyparsing import hexnums,tokenMap,printables,pyparsing_common
+from pyparsing import hexnums,tokenMap,pyparsing_common
+import pyparsing as pp
+
 
 from urllib.request import urlopen
 import datetime
@@ -488,6 +490,9 @@ class SiDIFParser(object):
         return literal
     
     def getIdentifier(self):
+        """
+        identifier definition
+        """
         identifier=Group(
             pyparsing_common.identifier
         ).setParseAction(self.handleIdentifier)('identifier')   
@@ -505,6 +510,9 @@ class SiDIFParser(object):
         return value
           
     def getGrammar(self):
+        """
+        get the grammar
+        """
         if self.grammar is None:
             value=self.getValueGrammar()
             identifier=self.getIdentifier() 
@@ -520,7 +528,7 @@ class SiDIFParser(object):
             ).setParseAction(self.convertToTriple)("hasLink")
             link=Group(islink|haslink|idlink).setParseAction(self.handleGroup)("link")
             comment=Group(
-                Suppress("#")+ZeroOrMore(Word(printables))+OneOrMore(LineEnd())|OneOrMore(LineEnd())
+                Suppress("#")+ZeroOrMore(Word(pp.pyparsing_unicode.Latin1.alphanums))+OneOrMore(LineEnd())|OneOrMore(LineEnd())
             ).setParseAction(self.handleComment)('comment*')
             line=Group(
                 value|link
@@ -543,7 +551,7 @@ class SiDIFParser(object):
             title=url
         return self.parseText(sidif,title=title)
         
-    def parseWithGrammar(self,grammar,text,title=None):
+    def parseWithGrammar(self,grammar,text,title=None,depth:int=None):
         '''
         parse the given text with the given grammar optionally 
         labeling the parse with the given title
@@ -552,6 +560,7 @@ class SiDIFParser(object):
             grammar(object): a pyparsing grammar
             text(str): the text to be parsed
             title(str): optional title
+            depth(int): the explain depth to show for the errorMessage
         '''
         result=None
         error=None
@@ -561,35 +570,37 @@ class SiDIFParser(object):
             result=grammar.parseString(text,parseAll=True)
         except ParseException as pe:
             if self.showError:
-                errMsg=SiDIFParser.errorMessage(title,pe)
+                errMsg=SiDIFParser.errorMessage(title,pe,depth=depth)
                 print (errMsg,file=sys.stderr)
             error=pe
         return result,error
     
     @classmethod
-    def errorMessage(cls,title:str,pe:ParseException)->str:
+    def errorMessage(cls,title:str,pe:ParseException,depth:int=None)->str:
         """
         Args:
             title(str): the title
             pe(ParseException): the exception to get the error message for
+            depth(int): the explain depth to show for the errorMessage
         Returns:
             str: an error message with the explanation
         """
         msg="%s: error in line %d col %d: \n%s" % (title,pe.lineno,pe.col,pe.line)
-        msg+="\n"+pe.explain(depth=0)
+        msg+="\n"+pe.explain(depth=depth)
         return msg
     
-    def parseText(self,sidif,title=None):
+    def parseText(self,sidif,title=None,depth:int=None):
         '''
         parse the given sidif text
         
         Args:
             sidif(str): the SiDIF text to be parsed
+            depth(int): the explain depth to show for the errorMessage
             
         Return:
             tuple: ParseResult from pyParsing and error - one of these should be None
         '''
-        return self.parseWithGrammar(self.getGrammar(),sidif,title)
+        return self.parseWithGrammar(self.getGrammar(),sidif,title,depth=depth)
     
     def warn(self,msg):
         '''

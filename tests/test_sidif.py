@@ -96,6 +96,7 @@ class TestSiDIFParser(Basetest):
                 "SiDIF isA DataInterchangeFormat\n",
                 "Paris capital France", "Paris is capital of France\n",
                 "France has capital Paris\n",
+                "#property Qualität"
              ]
             }
         ]
