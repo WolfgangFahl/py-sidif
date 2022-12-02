@@ -9,7 +9,6 @@ from pyparsing import ParseResults,Regex,Suppress,Word,ZeroOrMore
 from pyparsing import hexnums,tokenMap,pyparsing_common
 import pyparsing as pp
 
-
 from urllib.request import urlopen
 import datetime
 import re
@@ -528,7 +527,7 @@ class SiDIFParser(object):
             ).setParseAction(self.convertToTriple)("hasLink")
             link=Group(islink|haslink|idlink).setParseAction(self.handleGroup)("link")
             comment=Group(
-                Suppress("#")+ZeroOrMore(Word(pp.pyparsing_unicode.Latin1.alphanums))+OneOrMore(LineEnd())|OneOrMore(LineEnd())
+                Suppress("#")+ZeroOrMore(Word(pp.pyparsing_unicode.Latin1.printables))+OneOrMore(LineEnd())|OneOrMore(LineEnd())
             ).setParseAction(self.handleComment)('comment*')
             line=Group(
                 value|link
