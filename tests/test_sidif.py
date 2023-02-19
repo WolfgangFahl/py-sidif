@@ -6,8 +6,6 @@ Created on 2020-11-06
 from tests.basetest import Basetest
 import unittest
 from sidif.sidif import SiDIFParser, DataInterchange
-from urllib.request import urlopen
-import xmltodict
 
 class TestSiDIFParser(Basetest):
     '''
