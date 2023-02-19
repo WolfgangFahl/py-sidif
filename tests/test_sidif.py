@@ -6,7 +6,6 @@ Created on 2020-11-06
 from tests.basetest import Basetest
 import unittest
 from sidif.sidif import SiDIFParser, DataInterchange
-from sidif.uml import PlantUml
 from urllib.request import urlopen
 import xmltodict
 
@@ -174,44 +173,6 @@ class TestSiDIFParser(Basetest):
                 
             self.assertEqual(exTriples,foundTriples,example)
             self.assertEqual(exComments,foundComments,example)
-            
-    def testIssue4(self):
-        '''
-        https://github.com/WolfgangFahl/py-sidif/issues/4
-        convert dict tree to sidif
-        '''
-        uri="https://raw.githubusercontent.com/semstats/semstats.github.io/master/2019/ceur/workshop.xml"
-        xml=urlopen(uri).read().decode()
-        wsdict=xmltodict.parse(xml)
-        if self.debug:
-            print(wsdict)
-        dif=DataInterchange.ofDict(wsdict,context="ceurws")
-        sidifStr=dif.asSiDIF()
-        if self.debug:
-            print(sidifStr)
-        self.assertTrue("workshop isA Topic" in sidifStr)
-        self.assertTrue("homepage isA Property" in sidifStr)
-        uml=PlantUml(title="CEUR-WS",copyRight="© Christoph Lange and contributors 2012–2020")
-        uml.fromDIF(dif)
-        if self.debug:
-            print(uml)
-        self.assertTrue('''workshop " 1" -- "editors *" editor''' in uml.uml)
-            
-    def testIssue5(self):
-        '''
-        https://github.com/WolfgangFahl/py-sidif/issues/5
-        convert sidif to plantuml #5
-        '''
-        dif=self.getPresentation()
-        debug=self.debug
-        debug=True
-        uml=PlantUml(title="Presentation",copyRight="© BITPlan GmbH 2015-2022")
-        uml.fromDIF(dif)
-        if debug:
-            print (uml)
-        self.assertTrue("package Presentation {" in uml.uml)
-        self.assertTrue("class Icon {" in uml.uml)
-        self.assertTrue("author:Text" in uml.uml)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testSiDIFParser']

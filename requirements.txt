@@ -1,4 +1,0 @@
-# https://pypi.org/project/pyparsing/
-pyparsing
-#https://github.com/martinblech/xmltodict
-xmltodict
