@@ -6,4 +6,9 @@ if [ $? -ne 0 ]
 then
   pip install green
 fi
+which green
+if [ $? -ne 0 ]
+then
+  pip install green
+fi
 green
