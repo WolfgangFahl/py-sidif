@@ -4,18 +4,18 @@ sidif package
 Submodules
 ----------
 
-sidif.sidif module
-------------------
+sidif.profiler module
+---------------------
 
-.. automodule:: sidif.sidif
+.. automodule:: sidif.profiler
    :members:
    :undoc-members:
    :show-inheritance:
 
-sidif.uml module
-----------------
+sidif.sidif module
+------------------
 
-.. automodule:: sidif.uml
+.. automodule:: sidif.sidif
    :members:
    :undoc-members:
    :show-inheritance:

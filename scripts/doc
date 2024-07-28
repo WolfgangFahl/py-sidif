@@ -1,15 +1,15 @@
 #!/bin/bash
 # WF 2020-01-31
+# WF 2024-07-28 - updated
 
 #
 # check whether the given command is installed
 #
 checkinstalled() {
   local l_cmd="$1"
-  which $l_cmd > /dev/null
-  if [ $? -ne 0 ]
+  if ! command -v $l_cmd &> /dev/null
   then
-    echo "$l_cmd need to be installed" 1>&2
+    echo "$l_cmd needs to be installed" 1>&2
     exit 1
   fi
 }
@@ -40,12 +40,10 @@ fixconf() {
       next
     }
     /html_theme = / {
-      # html_theme = 'alabaster'
       printf "html_theme = %ssphinx_rtd_theme%s\n",squote,squote
       printf "master_doc = %sindex%s\n",squote,squote
       next
     }
-    # add sphinx_rtd extension
     /extensions = / {
       print $0
       printf "\t%ssphinx_rtd_theme%s,\n",squote,squote
@@ -56,28 +54,33 @@ fixconf() {
       print("#https://stackoverflow.com/a/44980548/1497139")
       print("import os")
       print("import sys")
-      print("import sphinx_rtd_theme")
       printf("basepath=os.path.abspath(%s../..%s)\n",squote,squote)
       printf("print(%sadding basepath %%s%s %% (basepath))\n",squote,squote)
       print("sys.path.insert(0, basepath)")
       printf("print(%ssys.path is now: %%s%s %% (sys.path))\n",squote,squote)
       next
     }
-    { print}' > $tmpconf
-    #diff $tmpconf $conf
+    { print }' > $tmpconf
     mv $tmpconf $conf
     echo "$src/conf.py has been fixed"
   fi
 }
 
 src=docs/source
-checkinstalled  sphinx-apidoc
+checkinstalled sphinx-apidoc
+checkinstalled sphinx-build
+checkinstalled awk
+
 sphinx-apidoc --full -f -o $src .
 cd $src
 
-fixconf 2020 "Wolfgang Fahl"
+fixconf 2024 "Wolfgang Fahl"
 make clean html
 if [ "$GHACTIONS" != "ACTIVE" ]
 then
-  open _build/html/index.html
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    open _build/html/index.html
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    xdg-open _build/html/index.html
+  fi
 fi
