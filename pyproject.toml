@@ -48,20 +48,7 @@ Source = "https://github.com/WolfgangFahl/py-sidif"
 test = [
   "green",
 ]
-docs = [
-    "sphinx~=5.0",
-    "furo~=2022.6.21",
-]
-[tool.sphinx]
-project = "py-sidif"
-author = "Wolfgang Fahl"
-copyright = "2024, BITPlan GmbH"
-html_theme = "furo"
-extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.viewcode",
-]
+
 [tool.hatch.build.targets.wheel]
 packages = [
   "sidif",
