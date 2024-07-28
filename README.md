@@ -3,7 +3,7 @@ SiDIF (Simple Data Interchange Format) parser
 
 [![Documentation Status](https://readthedocs.org/projects/py-sidif/badge/?version=latest)](https://py-sidif.readthedocs.io/en/latest/?badge=latest)
 [![pypi](https://img.shields.io/pypi/pyversions/py-sidif)](https://pypi.org/project/py-sidif/)
-[![Github Actions Build](https://github.com/WolfgangFahl/py-sidif/actions/workflows/build.yml/badge.svg)](https://github.com/WolfgangFahl/py
+[![Github Actions Build](https://github.com/WolfgangFahl/py-sidif/actions/workflows/build.yml/badge.svg)](https://github.com/WolfgangFahl/py-sidif/actions/workflows/build.yml)
 [![PyPI Status](https://img.shields.io/pypi/v/py-sidif.svg)](https://pypi.python.org/pypi/py-sidif/)
 [![Downloads](https://pepy.tech/badge/py-sidif)](https://pepy.tech/project/py-sidif)
 [![GitHub issues](https://img.shields.io/github/issues/WolfgangFahl/py-sidif.svg)](https://github.com/WolfgangFahl/py-sidif/issues)
