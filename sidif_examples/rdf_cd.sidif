@@ -1,0 +1,53 @@
+"
+ This example is based on:
+ http://www.w3schools.com/webservices/ws_rdf_example.asp
+
+<?xml version='1.0'?>
+
+<rdf:RDF
+xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns'
+xmlns:cd='http://www.recshop.fake/cd'>
+
+<rdf:Description
+rdf:about='http://www.recshop.fake/cd/Empire Burlesque'>
+  <cd:artist>Bob Dylan</cd:artist>
+  <cd:country>USA</cd:country>
+  <cd:company>Columbia</cd:company>
+  <cd:price>10.90</cd:price>
+  <cd:year>1985</cd:year>
+</rdf:Description>
+
+<rdf:Description
+rdf:about='http://www.recshop.fake/cd/Hide your heart'>
+  <cd:artist>Bonnie Tyler</cd:artist>
+  <cd:country>UK</cd:country>
+  <cd:company>CBS Records</cd:company>
+  <cd:price>9.90</cd:price>
+  <cd:year>1988</cd:year>
+</rdf:Description>
+.
+.
+.
+</rdf:RDF> 
+" is comment of SiDIF
+CD isA Concept
+Title addsTo it
+Artist addsTo it
+Country addsTo it
+Company addsTo it
+Price addsTo it
+Year addsTo it
+Empire_Burlesque isA CD
+"Empire Burlesque" is Title of it
+"BobDylan" is Artist of it
+"USA" is Country of it
+"Columbia" is Company of it
+10.9 is Price of it
+1985 is Year of it
+Hide_your_heart isA CD
+"Hide your heart" is Title of it
+"Bonnie Tyler" is Artist of it
+"UK" is Country of it
+"CBS Records" is Company of it
+9.9 is Price of it
+1988 is Year of it

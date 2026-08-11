@@ -1,0 +1,41 @@
+"
+ Json-LD example 5
+http://www.w3.org/TR/json-ld/
+{
+  '@context':
+  {
+    'name': 'http://schema.org/name',
+    'image': {
+      '@id': 'http://schema.org/image',
+      '@type': '@id'
+    },
+    'homepage': {
+      '@id': 'http://schema.org/url',
+      '@type': '@id'
+    }
+  },
+  'name': 'Manu Sporny',
+  'homepage': 'http://manu.sporny.org/',
+  'image': 'http://manu.sporny.org/images/manu.png'
+}
+" is comment of SiDIF
+ModelLevel isA Context
+"
+ model level
+ 
+" is comment of it
+HomePage isA Concept
+name addsTo HomePage
+image addsTo HomePage
+homepage addsTo HomePage
+image isA Property
+id addsTo image
+type addsTo image
+InstanceLevel isA Context
+" 
+ Instance Level
+" is comment of it
+Manu_Sporny_Homepage isA HomePage
+"Manu Sporny" is name of it
+http://manu.sporny.org is homepage of it
+http://manu.sporny.org/images/manu.png is image of it

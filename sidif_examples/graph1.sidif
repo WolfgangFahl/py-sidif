@@ -1,0 +1,11 @@
+"
+  Example from 
+  http://neo4j.com/docs/stable/what-is-a-graphdb.html
+
+" is comment of SiDIF
+Graph recordsDataIn Relationships
+Graph recordsDataIn Nodes
+Labels group Nodes
+Nodes have Properties
+Relationships organize Nodes
+Relationships have Properties

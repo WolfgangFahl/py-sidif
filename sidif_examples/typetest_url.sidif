@@ -1,0 +1,72 @@
+"
+ Test supported basetypes for SiDIF
+  see http://www.sidif.org
+" is commment of SiDIF
+Metamodel isA Context
+"
+Metamodel level
+" is comment of it
+Context isA Concept
+Metamodel is Context of it
+Type isA Concept
+Metamodel is Context of it
+name addsTo it
+allowedValue addsTo it
+TypeSource isA Concept
+Metamodel is Context of it
+url addsTo it
+TypeSource linksTo Type
+Model isA Context
+"
+  Model level
+" is comment of it
+Schema_Org isA TypeSource
+Model is Context of it
+Boolean linksTo it
+Date linksTo it
+DateTime linksTo it
+Number linksTo it
+Text linksTo it
+Time linksTo it
+"http://www.schema.org/DataType" is url of it
+SMW isA TypeSource
+Annotation_URI linksTo it
+Boolean linksTo it
+Code linksTo it
+Date linksTo it
+Email linksTo it
+Geographic_coordinate linksTo it
+Number linksTo it
+Page linksTo it
+Quantity linksTo it
+Record linksTo it
+Telephone_number linksTo it
+Temperature linksTo it
+Text linksTo it
+URL linksTo it
+"https://semantic-mediawiki.org/wiki/Help:List_of_datatypes" is url of it
+# typical types
+Boolean isA Type
+"Boolean" is name of Boolean
+Code isA Type
+Date isA Type
+"Date" is name of Date
+DateTime isA Type
+Email isA Type
+Geographic_coordinate isA Type
+Number isA Type
+Page isA Type
+Text isA Type
+Time isA Type
+IRI isA Type
+# value examples
+true is allowedValue of Boolean
+false is allowedValue of Boolean
+2015-02-25 is exampleValue of Date
+2015-02-25 11:34 is exampleValue of DateTime
+1 is exampleValue of Number
+3.1415926 is exampleValue of Number
+"Hello World!" is exampleValue of Text
+11:24 is exampleValue of Time
+#null is exampleValue of Time
+"http://www.bitplan.com" is exampleValue of IRI

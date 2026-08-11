@@ -35,7 +35,36 @@ scripts/test
 
 Usage
 =====
-see [test cases](https://github.com/WolfgangFahl/py-sidif/tree/main/tests)
+Command line
+------------
+The `sidif` command syntax checks SiDIF files:
+```bash
+sidif --help
+```
+```bash
+sidif sidif_examples/example1.sidif
+```
+```
+sidif_examples/example1.sidif: ok
+```
+
+Library
+-------
+```python
+from sidif.sidif import SiDIFParser
+
+sp = SiDIFParser()
+path = f"{SiDIFParser.examples_path()}/example1.sidif"
+result, error = sp.parseFile(path)
+assert error is None
+dif = result["links"][0]
+for triple in dif.triples:
+    print(triple)
+```
+
+Examples
+--------
+The [sidif_examples](https://github.com/WolfgangFahl/py-sidif/tree/main/sidif_examples) folder ships with the package; `SiDIFParser.examples_path()` returns its location. For more see the [test cases](https://github.com/WolfgangFahl/py-sidif/tree/main/tests).
 
 ## Documentation
 [Wiki](http://wiki.bitplan.com/index.php/py-sidif)

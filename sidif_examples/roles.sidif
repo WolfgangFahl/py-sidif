@@ -1,0 +1,17 @@
+#metamodel
+Topic isA Topic
+TopicConfiguration isA Topic
+Property isA Topic
+Role isA Topic
+name addsTo it
+multiple addsTo it
+source addsTo it
+target addsTo it
+properties isA Role
+"properties" is name of it
+true is multiple of it
+topicConfiguration isA Role
+"topicConfiguration" is name of it
+false is multiple of it
+Topic is source of it
+TopicConfiguration is target of it

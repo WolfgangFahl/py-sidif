@@ -1,0 +1,228 @@
+#
+# family tree example
+# data taken from http://www.daml.org/2001/01/gedcom/royal92.ged
+#
+# family tree model
+#
+#
+# Metamodel part 
+#
+Type isA Concept
+Text isA Type
+Date isA Type
+Boolean isA Type
+# 
+# 
+# Model Part
+#
+# Person
+Person isA Concept
+name addsTo Person
+name hasType Text
+nobleTitle addsTo Person
+nobleTitle hasType Text
+born addsTo Person
+born hasType Date
+yearBorn addsTo Person
+yearBorn hasType Number
+monthBorn addsTo Person
+monthBorn hasType Number
+birthPlace addsTo Person
+birthPlace hasType Text
+died addsTo Person
+died hasType Date
+diedAt addsTo Person
+diedAt hasType Text
+yearDied addsTo Person
+yearDied hasType Number
+monthDied addsTo Person
+monthDied hasType Number
+# Family
+Family isA Concept
+name addsTo Family
+name hasType Text
+weddingDate addsTo Family
+weddingDate hasType Date
+weddingPlace addsTo Family
+weddingPlace hasType Text
+yearMarried addsTo Family
+yearMarried hasType Number
+monthMarried addsTo Family
+monthMarried hasType Number
+divorced addsTo Family
+divorced hasType Boolean
+childOf addsTo Family
+childOf hasType Family
+parentOf addsTo Family
+parentOf hasType Family
+husbandOf addsTo Family
+husbandOf hasType Family
+#
+# Royal 92 data
+#
+Victoria_Hanover is parentOf of F1
+Victoria_Hanover is childOf of F42
+Victoria_Hanover isA Person
+"I1" is id of it
+"Victoria /Hanover/" is name of it
+1819-05-24 is born of it
+1819 is yearBorn of it
+5 is monthBorn of it
+"Kensington,Palace,London,England" is birthPlace of it
+1901-01-22 is died of it
+1901 is yearDied of it
+1 is monthDied of it
+"Royal Mausoleum,Frogmore,Berkshire,England" is diedAt of it
+"female" is sex of it
+"Queen of England" is nobleTitle of it
+Albert_Augustus_Charles is parentOf of F1
+Albert_Augustus_Charles is childOf of F43
+Albert_Augustus_Charles isA Person
+"I2" is id of it
+"Albert Augustus Charles" is name of it
+1819-08-26 is born of it
+1819 is yearBorn of it
+8 is monthBorn of it
+"Schloss Rosenau,Near Coburg,Germany" is birthPlace of it
+1861-12-14 is died of it
+1861 is yearDied of it
+12 is monthDied of it
+"Royal Masoleum,Frogmore,Windsor,England" is diedAt of it
+"male" is sex of it
+"Prince" is nobleTitle of it
+Victoria_Adelaide_Mary is parentOf of F3
+Victoria_Adelaide_Mary is childOf of F1
+Victoria_Adelaide_Mary isA Person
+"I3" is id of it
+"Victoria Adelaide Mary" is name of it
+1841-02-10 is born of it
+1841 is yearBorn of it
+2 is monthBorn of it
+"Throne Room,Buckingham Palac,England" is birthPlace of it
+1901-08-05 is died of it
+1901 is yearDied of it
+8 is monthDied of it
+"Friedenskirche,Potsdam" is diedAt of it
+"female" is sex of it
+"Princess Royal" is nobleTitle of it
+Edward_VII_Wettin is parentOf of F2
+Edward_VII_Wettin is childOf of F1
+Edward_VII_Wettin isA Person
+"I4" is id of it
+"Edward_VII /Wettin/" is name of it
+1841-11-09 is born of it
+1841 is yearBorn of it
+11 is monthBorn of it
+"Buckingham,Palace,London,England" is birthPlace of it
+1910-05-20 is died of it
+1910 is yearDied of it
+5 is monthDied of it
+"Windsor,Berkshire,England" is diedAt of it
+"male" is sex of it
+"King of England" is nobleTitle of it
+Alice_Maud_Mary is parentOf of F8
+Alice_Maud_Mary is childOf of F1
+Alice_Maud_Mary isA Person
+"I5" is id of it
+"Alice Maud Mary" is name of it
+1843-04-25 is born of it
+1843 is yearBorn of it
+4 is monthBorn of it
+"Buckingham,Palace,London,England" is birthPlace of it
+1878-12-14 is died of it
+1878 is yearDied of it
+12 is monthDied of it
+"Darmstadt,,,Germany" is diedAt of it
+"female" is sex of it
+"Princess" is nobleTitle of it
+Alfred_Ernest_Albert is parentOf of F26
+Alfred_Ernest_Albert is childOf of F1
+Alfred_Ernest_Albert isA Person
+"I6" is id of it
+"Alfred Ernest Albert" is name of it
+1844-08-06 is born of it
+1844 is yearBorn of it
+8 is monthBorn of it
+"Windsor Castle,Berkshire,England" is birthPlace of it
+1900-07-30 is died of it
+1900 is yearDied of it
+7 is monthDied of it
+"Schloss Rosenau,Near Coburg" is diedAt of it
+"male" is sex of it
+"Prince" is nobleTitle of it
+Helena_Augusta_Victoria is parentOf of F32
+Helena_Augusta_Victoria is childOf of F1
+Helena_Augusta_Victoria isA Person
+"I7" is id of it
+"Helena Augusta Victoria" is name of it
+1846-05-25 is born of it
+1846 is yearBorn of it
+5 is monthBorn of it
+"Buckingham,Palace,London,England" is birthPlace of it
+1923-06-09 is died of it
+1923 is yearDied of it
+6 is monthDied of it
+"Schomberg House,Pall Mall,London,England" is diedAt of it
+"female" is sex of it
+"Princess" is nobleTitle of it
+Louise_Caroline_Alberta is parentOf of F69
+Louise_Caroline_Alberta is childOf of F1
+Louise_Caroline_Alberta isA Person
+"I8" is id of it
+"Louise Caroline Alberta" is name of it
+1848-03-18 is born of it
+1848 is yearBorn of it
+3 is monthBorn of it
+"Buckingham,Palace,London,England" is birthPlace of it
+1939-12-03 is died of it
+1939 is yearDied of it
+12 is monthDied of it
+"Frogmore,,,England" is diedAt of it
+"female" is sex of it
+"Princess" is nobleTitle of it
+Arthur_William_Patrick is parentOf of F34
+Arthur_William_Patrick is childOf of F1
+Arthur_William_Patrick isA Person
+"I9" is id of it
+"Arthur William Patrick" is name of it
+1850-05-01 is born of it
+1850 is yearBorn of it
+5 is monthBorn of it
+"Buckingham,Palace,London,England" is birthPlace of it
+1942-01-16 is died of it
+1942 is yearDied of it
+1 is monthDied of it
+"Bagshot Park,Surrey" is diedAt of it
+"male" is sex of it
+"Prince" is nobleTitle of it
+Leopold_George_Duncan is parentOf of F5
+Leopold_George_Duncan is childOf of F1
+Leopold_George_Duncan isA Person
+"I10" is id of it
+"Leopold George Duncan" is name of it
+1853-04-07 is born of it
+1853 is yearBorn of it
+4 is monthBorn of it
+"Buckingham,Palace,London,England" is birthPlace of it
+1884-03-28 is died of it
+1884 is yearDied of it
+3 is monthDied of it
+"Cannes" is diedAt of it
+"male" is sex of it
+"Prince" is nobleTitle of it
+Beatrice_Mary_Victoria is parentOf of F6
+Beatrice_Mary_Victoria is childOf of F1
+Beatrice_Mary_Victoria isA Person
+"I11" is id of it
+"Beatrice Mary Victoria" is name of it
+1857-04-14 is born of it
+1857 is yearBorn of it
+4 is monthBorn of it
+"Buckingham,Palace,London,England" is birthPlace of it
+1944-10-26 is died of it
+1944 is yearDied of it
+10 is monthDied of it
+"Bantridge Park,Balcombe,Sussex,England" is diedAt of it
+"female" is sex of it
+"Princess" is nobleTitle of it
+Alexandra_of_Denmark_Alix is parentOf of F2

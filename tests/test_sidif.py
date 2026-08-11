@@ -17,8 +17,9 @@ class TestSiDIFParser(Basetest):
 
     def setUp(self, debug=False, profile=True):
         Basetest.setUp(self, debug=debug, profile=profile)
-        # from the original java code repository
-        self.baseUrl = "https://raw.githubusercontent.com/BITPlan/org.sidif.triplestore/master/src/test/resources/sidif"
+        # examples originally from the java code repository
+        # https://github.com/BITPlan/org.sidif.triplestore
+        self.examples_path = SiDIFParser.examples_path()
         pass
 
     def getExampleUris(self):
@@ -122,9 +123,9 @@ class TestSiDIFParser(Basetest):
         """
         get the SiDIF parse result for the presentation example
         """
-        url = f"{self.baseUrl}/presentation.sidif"
+        path = f"{self.examples_path}/presentation.sidif"
         sp = SiDIFParser(debug=self.debug)
-        parsed, error = sp.parseUrl(url, title="Presentation")
+        parsed, error = sp.parseFile(path, title="Presentation")
         self.assertTrue(error is None)
         # self.debug=True
         if self.debug:
@@ -169,8 +170,8 @@ class TestSiDIFParser(Basetest):
             ("utf8.sidif", 3, 1),
             ("vcard.sidif", 31, 2),
         ]:
-            url = "%s/%s" % (self.baseUrl, example)
-            result, error = sp.parseUrl(url, title=example)
+            path = "%s/%s" % (self.examples_path, example)
+            result, error = sp.parseFile(path, title=example)
             self.assertTrue(error is None)
             self.assertTrue("links" in result)
             di = result["links"][0]

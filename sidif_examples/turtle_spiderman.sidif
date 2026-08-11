@@ -1,0 +1,14 @@
+# This example is based on
+# http://www.w3.org/TR/turtle/#simple-triples
+# <http://example.org/#spiderman> <http://www.perceive.net/schemas/relationship/enemyOf> <http://example.org/#green-goblin> .
+# FIXME spiderman is enemy of green_goblin should also work
+ComicFigure isA Concept
+name addsTo ComicFigure
+Enemy isA Concept
+Enemy isA ComicFigure
+Spiderman isA ComicFigure
+"spiderman" is name of Spiderman
+GreenGoblin isA Enemy
+"green goblin" is name of GreenGoblin
+# FIXME identifier use
+# Spiderman is enemy of GreenGoblin

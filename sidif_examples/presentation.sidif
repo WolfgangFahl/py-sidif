@@ -1,0 +1,618 @@
+#
+# Context:Presentation
+#
+Presentation isA Context
+"Presentation" is name of it
+#
+#Bigstock
+#
+Bigstock isA Topic
+"Bigstock" is name of it
+"BigstockPhotos" is pluralName of it
+"A photo from http://www.bigstockphoto.com/de/" is documentation of it
+"A photo from http://www.bigstockphoto.com/de/ if it has been paid for it can be uploaded and it will be displayed from the Wiki. Otherwise only a preview is shown" is wikiDocumentation of it
+"File:BigstockIcon.png" is icon of it
+"/images/c/cc/BigstockIcon.png" is iconUrl of it
+"subobject" is defaultstoremode of it
+false is cargo of it
+"Presentation" is context of it
+Bigstock_id addsTo it
+Bigstock_file addsTo it
+# properties of Bigstock
+# property id
+Bigstock_id isA Property
+"id" is name of it
+"id" is label of it
+"Text" is type of it
+1 is index of it
+true is primaryKey of it
+true is mandatory of it
+8 is size of it
+false is uploadable of it
+"the id of the bigstock photo" is documentation of it
+false is showInGrid of it
+false is isLink of it
+"Bigstock" is topic of it
+# property file
+Bigstock_file isA Property
+"file" is name of it
+"file" is label of it
+"Page" is type of it
+2 is index of it
+false is primaryKey of it
+false is mandatory of it
+"File" is namespace of it
+100 is size of it
+true is uploadable of it
+"the downloaded bigstock file - if it is downloaded a license has been paid for" is documentation of it
+"namespace=File" is values_from of it
+false is showInGrid of it
+false is isLink of it
+"Bigstock" is topic of it
+#
+#Icon
+#
+Icon isA Topic
+"Icon" is name of it
+"Icons" is pluralName of it
+"An icon is a pictogram that is a symbol for some Topic" is documentation of it
+"Icons/Pictogramms were first used in the 1972 olympics see http://www.piktogramm.de/pictoserver/pictosite/index/general_pic_4701/de/de_general_pic_univer_1.php
+In computing, an icon is a pictogram displayed on a computer screen in order to help the user navigate a computer system or mobile device. The icon itself is a quickly comprehensible symbol of a software tool, function, or a data file, accessible on the system and is more like a traffic sign than a detailed illustration of the actual entity it represents.[1] It can serve as an electronic hyperlink or file shortcut to access the program or data. The user can activate an icon using a mouse, pointer, finger, or recently voice commands. Their placement on the screen, also in relation to other icons, may provide further information to the user about their usage.[2] In activating an icon, the user can move directly into and out of the identified function without knowing anything further about the location or requirements of the file or code." is wikiDocumentation of it
+"File:IconIcon.png" is icon of it
+"/images/e/eb/IconIcon.png" is iconUrl of it
+"subobject" is defaultstoremode of it
+false is cargo of it
+"Presentation" is context of it
+Icon_name addsTo it
+Icon_style addsTo it
+Icon_size addsTo it
+# properties of Icon
+# property name
+Icon_name isA Property
+"name" is name of it
+"name" is label of it
+"Text" is type of it
+1 is index of it
+false is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"name of the icon" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Icon" is topic of it
+# property style
+Icon_style isA Property
+"style" is name of it
+"style" is label of it
+"Text" is type of it
+2 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"radiobutton" is inputType of it
+"plain, shadow" is allowedValues of it
+"style of the icon" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Icon" is topic of it
+# property size
+Icon_size isA Property
+"size" is name of it
+"size" is label of it
+"Number" is type of it
+3 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"16,24,32,48,64" is allowedValues of it
+"size of the icon" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Icon" is topic of it
+#
+#Image
+#
+Image isA Topic
+"Image" is name of it
+"Images" is pluralName of it
+"I am an image" is documentation of it
+"I holde the information for an image" is wikiDocumentation of it
+"File:File-image-o.png" is icon of it
+"/images/8/8a/File-image-o.png" is iconUrl of it
+"property" is defaultstoremode of it
+false is cargo of it
+false is headerTabs of it
+"Presentation" is context of it
+Image_name addsTo it
+Image_title addsTo it
+Image_topic addsTo it
+# properties of Image
+# property name
+Image_name isA Property
+"name" is name of it
+"name" is label of it
+"Text" is type of it
+1 is index of it
+1 is sortPos of it
+true is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"I am the english name/identifier of an image and consist only of characters and numbers and underscores with no special characters e.g. what_is_a_model2" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Image" is topic of it
+# property title
+Image_title isA Property
+"title" is name of it
+"title" is label of it
+"Text" is type of it
+2 is index of it
+2 is sortPos of it
+true is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"I am the title of an image in the language as may be depicted on the image." is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Image" is topic of it
+# property topic
+Image_topic isA Property
+"topic" is name of it
+"topic" is label of it
+"Text" is type of it
+3 is index of it
+3 is sortPos of it
+true is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"I am the english name of an image." is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Image" is topic of it
+#
+#PageOrder
+#
+PageOrder isA Topic
+"PageOrder" is name of it
+"PageOrders" is pluralName of it
+"A list of pages that have the order as per form editing" is documentation of it
+"A list of pages have the order as per form editing" is wikiDocumentation of it
+"File:List-ol.png" is icon of it
+"/images/c/ce/List-ol.png" is iconUrl of it
+"subobject" is defaultstoremode of it
+false is cargo of it
+"Presentation" is context of it
+PageOrder_page addsTo it
+# properties of PageOrder
+# property page
+PageOrder_page isA Property
+"page" is name of it
+"page" is label of it
+"Page" is type of it
+1 is index of it
+true is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"The page that shall be ordered" is documentation of it
+"namespace=MAIN" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"PageOrder" is topic of it
+#
+#PageSequence
+#
+PageSequence isA Topic
+"PageSequence" is name of it
+"PageSequences" is pluralName of it
+"A Sequence of pages that might belong to the same category and might have an icon" is documentation of it
+"A Sequence of pages that might belong to the same category and might have an icon" is wikiDocumentation of it
+"File:PageSequenceIcon.png" is icon of it
+"/images/2/22/PageSequenceIcon.png" is iconUrl of it
+"property" is defaultstoremode of it
+false is cargo of it
+"Presentation" is context of it
+PageSequence_prev addsTo it
+PageSequence_next addsTo it
+PageSequence_categoryIcon addsTo it
+PageSequence_category addsTo it
+# properties of PageSequence
+# property prev
+PageSequence_prev isA Property
+"prev" is name of it
+"previous" is label of it
+"Page" is type of it
+1 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"the previous page" is documentation of it
+"namespace=Main" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"PageSequence" is topic of it
+# property next
+PageSequence_next isA Property
+"next" is name of it
+"next" is label of it
+"Page" is type of it
+2 is index of it
+false is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"the next page" is documentation of it
+"namespace=Main" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"PageSequence" is topic of it
+# property categoryIcon
+PageSequence_categoryIcon isA Property
+"categoryIcon" is name of it
+"categoryIcon" is label of it
+"Text" is type of it
+3 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"the category icon of the PageSequence" is documentation of it
+"concept=Icon" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"PageSequence" is topic of it
+# property category
+PageSequence_category isA Property
+"category" is name of it
+"category" is label of it
+"Page" is type of it
+4 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"the category of the PageSequence" is documentation of it
+"namespace=Category" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"PageSequence" is topic of it
+#
+#Presentation
+#
+Presentation isA Topic
+"Presentation" is name of it
+"Presentations" is pluralName of it
+"Slide Presentation" is documentation of it
+"MediaWiki has different means of presenting slides.<br> See e.g.
+[http://darcynorman.net/2007/05/02/mediawiki-as-a-presentation-application/ MediaWiki as a presentation application]
+* [https://www.mediawiki.org/w/index.php?title=File:DeployingCode-Security.pdf automatic Presentation of PDF files in MediaWiki]
+[[Presentation Howto]]<br>
+see also [[:Category:Slide]]<br>" is wikiDocumentation of it
+"File:PresentationIcon.png" is icon of it
+"/images/5/5e/PresentationIcon.png" is iconUrl of it
+"property" is defaultstoremode of it
+false is cargo of it
+"Presentation" is context of it
+Presentation_title addsTo it
+Presentation_author addsTo it
+Presentation_startDate addsTo it
+Presentation_file addsTo it
+Presentation_lang addsTo it
+# properties of Presentation
+# property title
+Presentation_title isA Property
+"title" is name of it
+"title" is label of it
+"Text" is type of it
+1 is index of it
+true is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"The title of a presentation" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Presentation" is topic of it
+# property author
+Presentation_author isA Property
+"author" is name of it
+"author" is label of it
+"Text" is type of it
+2 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"The author of the presentation" is documentation of it
+"namespace=User" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"Presentation" is topic of it
+# property startDate
+Presentation_startDate isA Property
+"startDate" is name of it
+"start date" is label of it
+"Date" is type of it
+3 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"datepicker" is inputType of it
+"The date the presentation was started" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Presentation" is topic of it
+# property file
+Presentation_file isA Property
+"file" is name of it
+"file" is label of it
+"Page" is type of it
+4 is index of it
+false is primaryKey of it
+false is mandatory of it
+"File" is namespace of it
+true is uploadable of it
+"The file the presentation resides in" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Presentation" is topic of it
+# property lang
+Presentation_lang isA Property
+"lang" is name of it
+"lang" is label of it
+"Text" is type of it
+5 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"radiobutton" is inputType of it
+"de,en" is allowedValues of it
+"language of the presentation" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Presentation" is topic of it
+#
+#Slide
+#
+Slide isA Topic
+"Slide" is name of it
+"Slides" is pluralName of it
+"I am a presentation slide" is documentation of it
+"I am presentation slide which consists of a single Wiki Page" is wikiDocumentation of it
+"File:SlideIcon.png" is icon of it
+"/images/d/df/SlideIcon.png" is iconUrl of it
+"property" is defaultstoremode of it
+false is cargo of it
+"Presentation" is context of it
+Slide_title addsTo it
+Slide_pageno addsTo it
+Slide_based_on addsTo it
+Slide_pages addsTo it
+Slide_prev addsTo it
+Slide_next addsTo it
+Slide_leftContent addsTo it
+Slide_rightContent addsTo it
+Slide_text addsTo it
+Slide_notes addsTo it
+Slide_print addsTo it
+Slide_template addsTo it
+Slide_state addsTo it
+Slide_comment addsTo it
+# properties of Slide
+# property title
+Slide_title isA Property
+"title" is name of it
+"title" is label of it
+"Text" is type of it
+1 is index of it
+false is primaryKey of it
+true is mandatory of it
+false is uploadable of it
+"title of the slide" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property pageno
+Slide_pageno isA Property
+"pageno" is name of it
+"#" is label of it
+"Text" is type of it
+2 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"text" is inputType of it
+"the pagenumber of this slide" is documentation of it
+false is isLink of it
+"Slide" is topic of it
+# property based on
+Slide_based_on isA Property
+"based on" is name of it
+"base on" is label of it
+"Page" is type of it
+2 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"some other page this slide references/is base on" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property pages
+Slide_pages isA Property
+"pages" is name of it
+" ##" is label of it
+"Text" is type of it
+3 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"total number of pages" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property prev
+Slide_prev isA Property
+"prev" is name of it
+"prev" is label of it
+"Page" is type of it
+4 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"the previous slide" is documentation of it
+"concept=Slide" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property next
+Slide_next isA Property
+"next" is name of it
+"next" is label of it
+"Page" is type of it
+5 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"the next slide" is documentation of it
+"concept=Slide" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property leftContent
+Slide_leftContent isA Property
+"leftContent" is name of it
+"left" is label of it
+"Text" is type of it
+6 is index of it
+false is primaryKey of it
+false is mandatory of it
+400 is size of it
+false is uploadable of it
+"textarea" is inputType of it
+"Content to be shown on the left of the slide" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property rightContent
+Slide_rightContent isA Property
+"rightContent" is name of it
+"right" is label of it
+"Text" is type of it
+7 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"textarea" is inputType of it
+"Content to be shown on the right of the slide" is documentation of it
+false is isLink of it
+"Slide" is topic of it
+# property text
+Slide_text isA Property
+"text" is name of it
+"text" is label of it
+"Text" is type of it
+8 is index of it
+false is primaryKey of it
+false is mandatory of it
+2000 is size of it
+false is uploadable of it
+"textarea" is inputType of it
+"the text of the slide (for fulltext search)" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property notes
+Slide_notes isA Property
+"notes" is name of it
+"notes" is label of it
+"Text" is type of it
+9 is index of it
+false is primaryKey of it
+false is mandatory of it
+2000 is size of it
+false is uploadable of it
+"textarea" is inputType of it
+"The notes for a slide" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property print
+Slide_print isA Property
+"print" is name of it
+"print" is label of it
+"Text" is type of it
+10 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"radiobutton" is inputType of it
+"wiki, skip, template" is allowedValues of it
+"how to print the slide: wiki - use wiki free text, template: compose with the given template (ppt is a pseudo template if the powerpoint original shall be used), skip: do not print at all" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property template
+Slide_template isA Property
+"template" is name of it
+"template" is label of it
+"Text" is type of it
+11 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"combobox" is inputType of it
+"the template to use for printing / showing this slide" is documentation of it
+"concept=Template" is values_from of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property state
+Slide_state isA Property
+"state" is name of it
+"state" is label of it
+"Text" is type of it
+12 is index of it
+false is primaryKey of it
+false is mandatory of it
+false is uploadable of it
+"radiobutton" is inputType of it
+"drafted,submitted,approved,rejected,obsolete" is allowedValues of it
+"the review state of the slide" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+# property comment
+Slide_comment isA Property
+"comment" is name of it
+"comment" is label of it
+"Text" is type of it
+13 is index of it
+false is primaryKey of it
+false is mandatory of it
+400 is size of it
+false is uploadable of it
+"textarea" is inputType of it
+"The comment for a slide" is documentation of it
+true is showInGrid of it
+false is isLink of it
+"Slide" is topic of it
+#
+# TopicLinks
+#
+#  slides 1:n
+Presentation_has_Slides isA TopicLink
+"presentation_has_slides" is name of it
+"Presentation" is source of it
+"presentation of this slide" is sourceDocumentation of it
+"presentation" is sourceRole of it
+false is sourceMultiple of it
+"Slide" is target of it
+"slides" is targetRole of it
+"slides for a presentation" is targetDocumentation of it
+true is targetMultiple of it
+true is masterDetail of it

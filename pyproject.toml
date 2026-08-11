@@ -28,6 +28,7 @@ classifiers=[
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Intended Audience :: Developers",
@@ -44,13 +45,17 @@ Home = "https://github.com/WolfgangFahl/py-sidif"
 Documentation = "https://wiki.bitplan.com/index.php/Py-sidif"
 Source = "https://github.com/WolfgangFahl/py-sidif"
 
+[project.scripts]
+sidif = "sidif.sidif_cmd:main"
+
 [project.optional-dependencies]
 test = [
   "green",
 ]
 
 [tool.hatch.build.targets.wheel]
-only-include = ["sidif"]
+only-include = ["sidif", "sidif_examples"]
 
 [tool.hatch.build.targets.wheel.sources]
 "sidif" = "sidif"
+"sidif_examples" = "sidif_examples"

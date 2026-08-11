@@ -1,0 +1,69 @@
+" family tree example
+ data taken from http://www.daml.org/2001/01/gedcom/royal92.ged
+
+ family tree model
+
+" is comment of SiDIF
+"
+ Metamodel part 
+
+" is comment of MetaModel
+MetaModel isA Context
+Type isA Concept
+Text isA Type
+Date isA Type
+Boolean isA Type
+Model isA Context
+"
+ 
+ Model Part
+
+" is comment of it
+"
+ Person
+ 
+" is comment of Person
+Person isA Concept
+name addsTo Person
+name hasType Text
+nobleTitle addsTo Person
+nobleTitle hasType Text
+born addsTo Person
+born hasType Date
+yearBorn addsTo Person
+yearBorn hasType Number
+monthBorn addsTo Person
+monthBorn hasType Number
+birthPlace addsTo Person
+birthPlace hasType Text
+died addsTo Person
+died hasType Date
+diedAt addsTo Person
+diedAt hasType Text
+yearDied addsTo Person
+yearDied hasType Number
+monthDied addsTo Person
+monthDied hasType Number
+"
+ Family
+
+" is comment of Family
+Family isA Concept
+family_name addsTo Family
+family_name hasType Text
+weddingDate addsTo Family
+weddingDate hasType Date
+weddingPlace addsTo Family
+weddingPlace hasType Text
+yearMarried addsTo Family
+yearMarried hasType Number
+monthMarried addsTo Family
+monthMarried hasType Number
+divorced addsTo Family
+divorced hasType Boolean
+childOf addsTo Family
+childOf hasType Family
+parentOf addsTo Family
+parentOf hasType Family
+husbandOf addsTo Family
+husbandOf hasType Family

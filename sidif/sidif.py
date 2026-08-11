@@ -5,6 +5,7 @@ Created on 2020-11-06
 """
 
 import datetime
+import os
 import re
 import sys
 from urllib.request import urlopen
@@ -289,6 +290,15 @@ class SiDIFParser(object):
         self.debug = debug
         self.grammar = None
         ParserElement.setDefaultWhitespaceChars(" \t")
+
+    @classmethod
+    def examples_path(cls) -> str:
+        """
+        get the path to the sidif_examples directory shipped with the package
+        """
+        path = os.path.join(os.path.dirname(__file__), "../sidif_examples")
+        path = os.path.abspath(path)
+        return path
 
     @staticmethod
     def getUriRegexp():
@@ -615,6 +625,19 @@ class SiDIFParser(object):
         sidif = urlopen(url).read().decode()
         if title is None:
             title = url
+        return self.parseText(sidif, title=title)
+
+    def parseFile(self, path, title=None):
+        """
+        parse the sidif text from the given file path
+
+        Args:
+            path(str): the path of the file to read the SiDIF text from
+        """
+        with open(path) as sidif_file:
+            sidif = sidif_file.read()
+        if title is None:
+            title = str(path)
         return self.parseText(sidif, title=title)
 
     def parseWithGrammar(self, grammar, text, title=None, depth: int = None):
