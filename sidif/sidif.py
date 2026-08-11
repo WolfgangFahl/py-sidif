@@ -145,10 +145,15 @@ class DataInterchange:
             sidifStr += f"{sidif}\n"
         return sidifStr
 
-    def toDictOfDicts(self):
+    def toDictOfDicts(self, qualify: bool = False, separator: str = "."):
         """
         convert me to a dict of dicts
         following the "it" semantics
+
+        with qualify=True identifiers are only unique per Topic:
+        isA triples key their entry as <subject><separator><type> so that
+        e.g. Monaco isA City and Monaco isA Country lead to the
+        different keys Monaco.City and Monaco.Country
 
         e.g.
 
@@ -181,6 +186,10 @@ class DataInterchange:
                 }
             }
 
+        Args:
+            qualify(bool): if True key isA entries as <subject><separator><type>
+            separator(str): the qualifier separator to use
+
         Returns:
             dict: the dict of dicts representation of the triples found
         """
@@ -200,11 +209,14 @@ class DataInterchange:
                 o = triple.s
             else:
                 o = triple.o
-                if triple.s in dod:
-                    it = dod[triple.s]
+                key = triple.s
+                if qualify and triple.p == "isA":
+                    key = f"{triple.s}{separator}{o}"
+                if key in dod:
+                    it = dod[key]
                 else:
                     it = {}
-                    dod[triple.s] = it
+                    dod[key] = it
             it[triple.p] = o
         return dod
 

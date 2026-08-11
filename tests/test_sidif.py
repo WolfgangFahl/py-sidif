@@ -144,6 +144,32 @@ class TestSiDIFParser(Basetest):
             print(dod)
         self.assertEqual(40, len(dod))
 
+    def testQualifiedDictOfDicts(self):
+        """
+        test qualified dict of dicts keys
+        https://github.com/WolfgangFahl/py-sidif/issues/3
+        """
+        sp = SiDIFParser(showErrors=False)
+        sidif = """Monaco isA City
+"Monaco-Ville" is capital of it
+Monaco isA Country
+"Monaco City" is capital of it
+"""
+        result, error = sp.parseText(sidif, title="Monaco")
+        self.assertIsNone(error)
+        dif = result["links"][0]
+        # default: second isA overwrites the first entry
+        dod = dif.toDictOfDicts()
+        self.assertEqual(["Monaco"], list(dod.keys()))
+        # qualified: one entry per Topic
+        qdod = dif.toDictOfDicts(qualify=True)
+        self.assertEqual(["Monaco.City", "Monaco.Country"], list(qdod.keys()))
+        self.assertEqual("Monaco-Ville", qdod["Monaco.City"]["capital"])
+        self.assertEqual("Monaco City", qdod["Monaco.Country"]["capital"])
+        # choosable separator
+        sdod = dif.toDictOfDicts(qualify=True, separator="/")
+        self.assertEqual(["Monaco/City", "Monaco/Country"], list(sdod.keys()))
+
     def testExamples(self):
         """
         test Examples from org.sidif.triplestore
