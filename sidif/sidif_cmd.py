@@ -42,11 +42,17 @@ class SiDIFCmd:
         except OSError as ose:
             print(f"{sidif_path}: {ose}", file=sys.stderr)
             return 1
-        _result, error = self.parser.parseText(
+        result, error = self.parser.parseText(
             sidif_text, title=sidif_path, depth=self.depth
         )
         if error is None:
-            print(f"{sidif_path}: ok")
+            lines = sidif_text.count("\n")
+            dif = result["links"][0]
+            triples = len(dif.triples)
+            comments = len(dif.comments)
+            print(
+                f"{sidif_path}: ok - {lines} lines, {triples} triples, {comments} comments"
+            )
             return 0
         err_msg = SiDIFParser.errorMessage(sidif_path, error, depth=self.depth)
         print(err_msg, file=sys.stderr)

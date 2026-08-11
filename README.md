@@ -45,7 +45,7 @@ sidif --help
 sidif sidif_examples/example1.sidif
 ```
 ```
-sidif_examples/example1.sidif: ok
+sidif_examples/example1.sidif: ok - 10 lines, 11 triples, 0 comments
 ```
 
 Library
