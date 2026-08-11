@@ -6,9 +6,9 @@ Created on 2026-08-11
 import argparse
 import sys
 from pathlib import Path
-from urllib.request import urlopen
 
 from sidif.sidif import SiDIFParser
+from sidif.url_fetcher import UrlFetcher
 from sidif.version import Version
 
 
@@ -21,6 +21,7 @@ class SiDIFCmd:
         self.debug = debug
         self.depth = depth
         self.parser = SiDIFParser(showErrors=False, debug=debug)
+        self.url_fetcher = UrlFetcher(debug=debug)
 
     def check(self, sidif_path: str) -> int:
         """
@@ -36,7 +37,7 @@ class SiDIFCmd:
             # scheme://... is a URL (http, https, ftp, file - all urlopen schemes)
             # a Windows drive letter like C:\foo has no // and stays a path
             if "://" in sidif_path:
-                sidif_text = urlopen(sidif_path).read().decode()
+                sidif_text = self.url_fetcher.sidif_of_url(sidif_path)
             else:
                 sidif_text = Path(sidif_path).read_text()
         except OSError as ose:

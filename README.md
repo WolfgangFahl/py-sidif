@@ -37,7 +37,7 @@ Usage
 =====
 Command line
 ------------
-The `sidif` command syntax checks SiDIF files given as paths or URLs (http, https, ftp, file):
+The `sidif` command syntax checks SiDIF files given as paths or URLs (http, https, ftp, file). MediaWiki pages carrying SiDIF in source blocks such as [MetaModel](https://contexts.bitplan.com/index.php/MetaModel) are fetched via action=raw and extracted automatically:
 ```bash
 sidif --help
 ```
