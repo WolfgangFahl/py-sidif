@@ -6,6 +6,7 @@ Created on 2026-08-11
 import argparse
 import sys
 from pathlib import Path
+from urllib.request import urlopen
 
 from sidif.sidif import SiDIFParser
 from sidif.version import Version
@@ -23,17 +24,21 @@ class SiDIFCmd:
 
     def check(self, sidif_path: str) -> int:
         """
-        syntax check the given SiDIF file
+        syntax check the given SiDIF file or URL
 
         Args:
-            sidif_path(str): path to the SiDIF file to check
+            sidif_path(str): path or URL of the SiDIF file to check
 
         Returns:
             int: 0 if the file parses, 1 on syntax error or unreadable file
         """
-        path = Path(sidif_path)
         try:
-            sidif_text = path.read_text()
+            # scheme://... is a URL (http, https, ftp, file - all urlopen schemes)
+            # a Windows drive letter like C:\foo has no // and stays a path
+            if "://" in sidif_path:
+                sidif_text = urlopen(sidif_path).read().decode()
+            else:
+                sidif_text = Path(sidif_path).read_text()
         except OSError as ose:
             print(f"{sidif_path}: {ose}", file=sys.stderr)
             return 1

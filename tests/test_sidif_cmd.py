@@ -61,6 +61,15 @@ class TestSiDIFCmd(Basetest):
         exit_code = main([str(example_path)])
         self.assertEqual(0, exit_code)
 
+    def test_check_url(self):
+        """
+        test syntax check of a file:// URL of a shipped sidif_examples file
+        """
+        example_path = Path(SiDIFParser.examples_path()) / "familyTree.sidif"
+        url = example_path.as_uri()
+        exit_code = main([url])
+        self.assertEqual(0, exit_code)
+
     def test_check_missing_file(self):
         """
         test syntax check of a non-existing file

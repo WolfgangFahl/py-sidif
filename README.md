@@ -37,7 +37,7 @@ Usage
 =====
 Command line
 ------------
-The `sidif` command syntax checks SiDIF files:
+The `sidif` command syntax checks SiDIF files given as paths or URLs (http, https, ftp, file):
 ```bash
 sidif --help
 ```
